@@ -51,7 +51,9 @@ public class AngularPerspective extends Perspective implements IAngularPerspecti
             add(new WireframeBehavior(wfSettings));
         }
 
-        perspectiveUrl = "";
+        // Initial setup of the perspective...
+        // TODO: Test
+        perspectiveUrl = config.getString(PluginConstants.ANGULAR_PERSPECTIVE_URL);
         srcModel = new Model<String>() {
             @Override
             public String getObject() {
@@ -65,6 +67,7 @@ public class AngularPerspective extends Perspective implements IAngularPerspecti
 
         appPanel = new WebMarkupContainer("perspective-iframe");
         appPanel.setOutputMarkupId(true);
+        appPanel.add(new AttributeModifier("src", srcModel));
         add(appPanel);
     }
 
