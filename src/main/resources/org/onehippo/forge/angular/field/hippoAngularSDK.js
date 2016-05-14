@@ -9,6 +9,18 @@ sdkApp.directive('ngField', function () {
     },
     controller: ['$scope', '$timeout', '$log', '$element', '$http', '$mdDialog', function ($scope, $timeout, $log, $element, $http, $mdDialog) {
 
+      this.lastUpdate = function () {
+        return $scope.lastUpdate;
+      }
+
+      this.lastLoad = function () {
+        return $scope.lastLoad;
+      }
+
+      this.lastError = function () {
+        return $scope.errors[0];
+      }
+
       this.getMode = function () {
         return $scope.mode;
       }
@@ -17,19 +29,39 @@ sdkApp.directive('ngField', function () {
         $log.debug("Loading model");
         var queryUrl = $element.attr('getModel');
         if (queryUrl != undefined) {
-          return $http.post(queryUrl);
+          return $http.post(queryUrl).then(
+              function (response) {
+                $scope.lastLoad = new Date().toLocaleString();
+                return response;
+              },
+              function (httpError) {
+                // translate the error
+                throw httpError.status + " : " +
+                httpError.data;
+              }
+          )
         }
       }
 
-      this.updateModel = function(model) {
+      this.updateModel = function (model) {
         $log.debug("Updating model");
         var queryUrl = $element.attr('setModel');
         if (queryUrl != undefined) {
-          return $http.post(queryUrl, model);
+          return $http.post(queryUrl, model).then(
+              function (response) {
+                $scope.lastUpdate = new Date().toLocaleString();
+                return response;
+              },
+              function (httpError) {
+                // translate the error
+                throw httpError.status + " : " +
+                httpError.data;
+              }
+          );
         }
       };
 
-      this.getCallback = function(callbackName) {
+      this.getCallback = function (callbackName) {
         return $element.attr(callbackName);
       }
 
@@ -41,7 +73,7 @@ sdkApp.directive('ngField', function () {
         });
       };
 
-      this.switchPerspective = function(name, action, option) {
+      this.switchPerspective = function (name, action, option) {
         $log.debug("Switching perspectives");
         var callback = $element.attr('switchPerspective');
         if (callback != undefined) {
@@ -78,7 +110,7 @@ sdkApp.directive('ngPerspective', function () {
         }
       }
 
-      this.getCallback = function(callbackName) {
+      this.getCallback = function (callbackName) {
         return $element.attr(callbackName);
       }
     }]

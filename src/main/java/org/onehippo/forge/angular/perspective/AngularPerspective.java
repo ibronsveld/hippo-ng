@@ -5,21 +5,29 @@ import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.JavaScriptReferenceHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.ComponentDetachableModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
+import org.apache.wicket.request.Url;
+import org.apache.wicket.request.resource.ContextRelativeResourceReference;
+import org.apache.wicket.request.resource.IResource;
+import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.request.resource.UrlResourceReference;
 import org.hippoecm.frontend.PluginRequestTarget;
 import org.hippoecm.frontend.plugin.IPluginContext;
 import org.hippoecm.frontend.plugin.config.IPluginConfig;
 import org.hippoecm.frontend.plugins.standards.perspective.Perspective;
 import org.hippoecm.frontend.plugins.yui.layout.WireframeBehavior;
 import org.hippoecm.frontend.plugins.yui.layout.WireframeSettings;
+import org.hippoecm.frontend.service.IconSize;
 import org.onehippo.forge.angular.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.URL;
 import java.util.Iterator;
 
 /**
@@ -33,6 +41,7 @@ public class AngularPerspective extends Perspective implements IAngularPerspecti
     private IModel<String> srcModel;
     private String perspectiveUrl;
     private final String PERSPECTIVE_TITLE;
+    private final String PERSPECTIVE_ICON;
     private final String PERSPECTIVE_ID;
 
     private static final String EVENT_PERSPECTIVE_DEACTIVATED = "angular-perspective-deactivated";
@@ -51,7 +60,6 @@ public class AngularPerspective extends Perspective implements IAngularPerspecti
             add(new WireframeBehavior(wfSettings));
         }
 
-        // Initial setup of the perspective...
         // TODO: Test
         perspectiveUrl = config.getString(PluginConstants.ANGULAR_PERSPECTIVE_URL);
         srcModel = new Model<String>() {
@@ -61,8 +69,10 @@ public class AngularPerspective extends Perspective implements IAngularPerspecti
             }
         };
 
+        // Test strings
         PERSPECTIVE_ID = config.getString(PluginConstants.ANGULAR_PERSPECTIVE_ID);
-        PERSPECTIVE_TITLE = config.getString(PluginConstants.ANGULAR_PERSPECTIVE_TITLE);
+        PERSPECTIVE_TITLE = config.getString(PluginConstants.ANGULAR_PERSPECTIVE_TITLE, "");
+        PERSPECTIVE_ICON = config.getString(PluginConstants.ANGULAR_PERSPECTIVE_ICON, "");
         context.registerService(this, PERSPECTIVE_ID);
 
         appPanel = new WebMarkupContainer("perspective-iframe");
@@ -73,7 +83,18 @@ public class AngularPerspective extends Perspective implements IAngularPerspecti
 
     @Override
     public IModel<String> getTitle() {
-        return new StringResourceModel("perspective-title", this, Model.of(PERSPECTIVE_TITLE));
+        return Model.of(PERSPECTIVE_TITLE);
+//        return new StringResourceModel("perspective-title", this, Model.of(PERSPECTIVE_TITLE));
+    }
+
+    @Override
+    public ResourceReference getIcon(IconSize size) {
+        //return super.getIcon(size);
+        // To Full URL
+        Url url = Url.parse(PERSPECTIVE_ICON);
+
+        UrlResourceReference urlResourceReference = new UrlResourceReference(url);
+        return urlResourceReference;
     }
 
     @Override
