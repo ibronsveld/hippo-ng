@@ -1,3 +1,5 @@
 # Hippo CMS Angular Plugin SDK
 ## Introduction
-Test
+This describes all methods that are available in the SDK currently.
+
+

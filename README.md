@@ -17,9 +17,10 @@ as a generic way to add your own fields to the document.
 ## Using and extending the plugin
 More information can be found in the docs section.
 ### Adding custom behaviours to the field
-TODO: Explain this
-### Adding custom data storing
-TODO: Explain this
+More information can be found in the docs section.
+### Adding custom data access
+If needed, the plugin can be extended to have customized data storage on JCR level. This is done by modifying the
+JcrModelSerializer.
 ## Contributing
 1. Fork it!
 2. Create your feature branch: `git checkout -b my-new-feature`

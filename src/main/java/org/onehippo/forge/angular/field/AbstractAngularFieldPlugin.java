@@ -33,8 +33,9 @@ import org.hippoecm.frontend.service.render.RenderPlugin;
 import org.onehippo.forge.angular.AngularPluginContext;
 import org.onehippo.forge.angular.AngularPluginUtils;
 import org.onehippo.forge.angular.PluginConstants;
+import org.onehippo.forge.angular.behaviors.AbstractCustomPluginBehavior;
 import org.onehippo.forge.angular.jcr.JcrModelSerializer;
-import org.onehippo.forge.angular.wicket.SwitchPerspectiveBehavior;
+import org.onehippo.forge.angular.behaviors.SwitchPerspectiveBehavior;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -92,19 +93,16 @@ public abstract class AbstractAngularFieldPlugin extends RenderPlugin<Node> impl
             compareBaseDocumentModel = null;
         }
 
-        fieldContext = new AngularPluginContext(context, config);
-
         // Store the Model Serializer to use
         jcrModelSerializer = createModelSerializerInstance();
-        //add(new Label("angularfield-caption", getCaptionModel()));
+        fieldContext = new AngularPluginContext(context, config, jcrModelSerializer);
 
         UNIQUE_COMPONENT_ID = AngularPluginUtils.generateUniqueComponentId(APP_NAME, 6);
 
         angularFieldPanel = new AngularFieldPanel("angularfield-container", UNIQUE_COMPONENT_ID, fieldContext, APP_NAME);
-        angularFieldPanel.add(new UpdateModelDataBehaviour());
-        angularFieldPanel.add(new GetModelDataBehaviour());
-        angularFieldPanel.add(new SwitchPerspectiveBehavior(fieldContext));
-        //angularFieldPanel.add(new SwitchPerspectiveBehaviour());
+        angularFieldPanel.add(new UpdateModelDataBehaviour(fieldContext, "setModel"));
+        angularFieldPanel.add(new GetModelDataBehaviour(fieldContext, "getModel"));
+        angularFieldPanel.add(new SwitchPerspectiveBehavior(fieldContext, "switchPerspective"));
 
         if (isEditMode()) {
             angularFieldPanel.add(new AttributeModifier("mode", "edit"));
@@ -211,11 +209,16 @@ public abstract class AbstractAngularFieldPlugin extends RenderPlugin<Node> impl
         }
     }
 
-
-
-
-    private final class GetModelDataBehaviour extends AbstractAjaxBehavior {
+    private class GetModelDataBehaviour extends AbstractCustomPluginBehavior {
         private static final long serialVersionUID = 1L;
+
+        private AngularPluginContext context;
+        private String componentTag;
+        private JcrNodeModel model;
+
+        public GetModelDataBehaviour(AngularPluginContext context, String componentTag) {
+            super(context, componentTag);
+        }
 
         @Override
         public void onRequest() {
@@ -229,19 +232,15 @@ public abstract class AbstractAngularFieldPlugin extends RenderPlugin<Node> impl
 
             requestCycle.scheduleRequestHandlerAfterCurrent(
                     new TextRequestHandler("application/json",
-                            "UTF-8", fieldJson));
+                            "UTF-8", ""));
         }
-
-        @Override
-        protected void onComponentTag(ComponentTag tag) {
-            tag.put("getModel",
-                    getCallbackUrl().toString());
-        }
-
     }
-
-    private final class UpdateModelDataBehaviour extends AbstractAjaxBehavior {
+    private final class UpdateModelDataBehaviour extends AbstractCustomPluginBehavior {
         private static final long serialVersionUID = 1L;
+
+        public UpdateModelDataBehaviour(AngularPluginContext context, String componentTag) {
+            super(context, componentTag);
+        }
 
         @Override
         public void onRequest() {
@@ -264,12 +263,6 @@ public abstract class AbstractAngularFieldPlugin extends RenderPlugin<Node> impl
             requestCycle.scheduleRequestHandlerAfterCurrent(
                     new TextRequestHandler("application/json",
                             "UTF-8", fieldJson));
-        }
-
-        @Override
-        protected void onComponentTag(ComponentTag tag) {
-            tag.put("setModel",
-                    getCallbackUrl().toString());
         }
     }
 }

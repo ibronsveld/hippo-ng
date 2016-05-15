@@ -1,4 +1,4 @@
-package org.onehippo.forge.angular.wicket;
+package org.onehippo.forge.angular.behaviors;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
@@ -19,11 +19,12 @@ import org.slf4j.LoggerFactory;
 public class SwitchPerspectiveBehavior extends AbstractDefaultAjaxBehavior {
     private static final Logger log = LoggerFactory.getLogger(SwitchPerspectiveBehavior.class);
     private final AngularPluginContext context;
+    private final String componentTag;
 
-    public SwitchPerspectiveBehavior(AngularPluginContext context) {
+    public SwitchPerspectiveBehavior(AngularPluginContext context, String componentTag) {
         this.context = context;
+        this.componentTag = componentTag;
     }
-
 
     private <T extends IClusterable> T loadService(final String name, final String configServiceId, final Class<T> clazz) {
         final T service = context.getPluginContext().getService(configServiceId, clazz);
@@ -32,7 +33,6 @@ public class SwitchPerspectiveBehavior extends AbstractDefaultAjaxBehavior {
         }
         return service;
     }
-
 
     @Override
     protected void respond(AjaxRequestTarget ajaxRequestTarget) {
@@ -75,4 +75,5 @@ public class SwitchPerspectiveBehavior extends AbstractDefaultAjaxBehavior {
         super.onComponentTag(tag);
         tag.put("switchPerspective", getCallbackScript());
     }
+
 }
