@@ -35,13 +35,18 @@ function ngFieldController ($scope, $timeout, $log, $element, $http, $mdDialog) 
   }
 
   /**
-   * Gets the mode that is set on the plugin (edit /)
-   * @returns {*}
+   * Gets the mode that is set on the plugin (edit / compare)
+   * @returns {string} mode that is set by the CMS
    */
   this.getMode = function () {
     return $scope.mode;
   }
 
+  /**
+   * Loads the model as it is currently available in the CMS.
+   *
+   * @returns {*} promise of the $http.post
+   */
   this.loadModel = function () {
     $log.debug("Loading model");
     var queryUrl = $element.attr('getModel');
@@ -60,6 +65,11 @@ function ngFieldController ($scope, $timeout, $log, $element, $http, $mdDialog) 
     }
   }
 
+  /**
+   * This method will update the current model in the CMS with the supplied model object
+   * @param model
+   * @returns {*} promise of the $http.post
+   */
   this.updateModel = function (model) {
     $log.debug("Updating model");
     var queryUrl = $element.attr('setModel');
@@ -78,10 +88,21 @@ function ngFieldController ($scope, $timeout, $log, $element, $http, $mdDialog) 
     }
   };
 
+  /**
+   * Gets the associated callback from the element. Provided for utility purposes
+   * @param callbackName name of the attribute to look for.
+   * @returns {*} attribute value
+   */
   this.getCallback = function (callbackName) {
     return $element.attr(callbackName);
   }
 
+  /**
+   * Shows an Angular Material Dialog
+   * @param templateDialog Dialog URL
+   * @param controllerFn Controller function
+   * @returns {*} promise
+   */
   this.showDialog = function (templateDialog, controllerFn) {
     return $mdDialog.show({
       controller: controllerFn,
@@ -90,6 +111,13 @@ function ngFieldController ($scope, $timeout, $log, $element, $http, $mdDialog) 
     });
   };
 
+  /**
+   * Switches perspectives in the CMS by using the configured {@link org.onehippo.forge.angular.perspective.IAngularPerspectiveService}
+   * @param name name of the service
+   * @param action action to execute (provided to service)
+   * @param option option to pass (provided to service)
+   *
+   */
   this.switchPerspective = function (name, action, option) {
     $log.debug("Switching perspectives");
     var callback = $element.attr('switchPerspective');
