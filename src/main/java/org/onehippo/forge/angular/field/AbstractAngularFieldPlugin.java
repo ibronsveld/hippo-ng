@@ -232,7 +232,7 @@ public abstract class AbstractAngularFieldPlugin extends RenderPlugin<Node> impl
 
             requestCycle.scheduleRequestHandlerAfterCurrent(
                     new TextRequestHandler("application/json",
-                            "UTF-8", ""));
+                            "UTF-8", fieldJson));
         }
     }
     private final class UpdateModelDataBehaviour extends AbstractCustomPluginBehavior {

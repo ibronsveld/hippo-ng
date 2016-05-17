@@ -17,22 +17,18 @@ function ngFieldController ($scope, $timeout, $log, $element, $http, $mdDialog) 
    * Gets the last time the model has been updated through the API
    * @returns {string|*} localized date
    */
-  this.lastUpdate = function () {
-    return $scope.lastUpdate;
+  this.getLastChanged = function () {
+    return $scope.lastChanged;
   }
 
   /**
    * Gets the last time the model has been loaded through the API
    * @returns {string|*} localized date and time
    */
-  this.lastLoad = function () {
-    return $scope.lastLoad;
+  this.getLastUpdate = function () {
+    return $scope.lastUpdate;
   }
 
-
-  this.lastError = function () {
-    return $scope.errors[0];
-  }
 
   /**
    * Gets the mode that is set on the plugin (edit / compare)
@@ -53,7 +49,7 @@ function ngFieldController ($scope, $timeout, $log, $element, $http, $mdDialog) 
     if (queryUrl != undefined) {
       return $http.post(queryUrl).then(
           function (response) {
-            $scope.lastLoad = new Date().toLocaleString();
+            $scope.lastUpdate = new Date().toLocaleString();
             return response;
           },
           function (httpError) {
@@ -76,7 +72,7 @@ function ngFieldController ($scope, $timeout, $log, $element, $http, $mdDialog) 
     if (queryUrl != undefined) {
       return $http.post(queryUrl, model).then(
           function (response) {
-            $scope.lastUpdate = new Date().toLocaleString();
+            $scope.lastChanged = new Date().toLocaleString();
             return response;
           },
           function (httpError) {
@@ -133,15 +129,15 @@ function ngFieldController ($scope, $timeout, $log, $element, $http, $mdDialog) 
   }
 }
 
-sdkApp.directive('ngField', ['$scope', '$timeout', '$log', '$element', '$http', '$mdDialog', function () {
+sdkApp.directive('ngField',  function () {
   return {
     restrict: 'A',
     scope: {
       mode: '@'
     },
-    controller: ngFieldController
+    controller: ['$scope', '$timeout', '$log', '$element', '$http', '$mdDialog', ngFieldController]
   };
-}]);
+});
 
 sdkApp.directive('ngPerspective', function () {
   return {
