@@ -10,6 +10,7 @@ public class PluginConstants {
     public final static String ANGULAR_FIELD_DIRECTIVE = "angular.field.directive";
     public final static String ANGULAR_FIELD_APPNAME = "angular.field.appname";
     public final static String ANGULAR_FIELD_NAME = "angular.field.name";
+    public final static String ANGULAR_FIELD_CONFIGURATION = "angular.field.config";
 
     public final static String ANGULAR_PERSPECTIVE_ID = "angular.perspective.id";
     public final static String ANGULAR_PERSPECTIVE_URL = "angular.perspective.url";

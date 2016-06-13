@@ -17,8 +17,6 @@ package org.onehippo.forge.angular.field;
 
 import com.google.gson.*;
 import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.behavior.AbstractAjaxBehavior;
-import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.TextRequestHandler;
@@ -103,6 +101,7 @@ public abstract class AbstractAngularFieldPlugin extends RenderPlugin<Node> impl
         angularFieldPanel.add(new UpdateModelDataBehaviour(fieldContext, "setModel"));
         angularFieldPanel.add(new GetModelDataBehaviour(fieldContext, "getModel"));
         angularFieldPanel.add(new SwitchPerspectiveBehavior(fieldContext, "switchPerspective"));
+        angularFieldPanel.add(new GetPluginConfigurationBehaviour(fieldContext, "getPluginConfig"));
 
         if (isEditMode()) {
             angularFieldPanel.add(new AttributeModifier("mode", "edit"));
@@ -188,25 +187,34 @@ public abstract class AbstractAngularFieldPlugin extends RenderPlugin<Node> impl
                 .getString("mode", "view")));
     }
 
-    protected String getJsonFromRequest(WebRequest wr) {
+    protected String getContentFromRequest(WebRequest wr) {
         HttpServletRequest hsr =
                 (HttpServletRequest) wr.getContainerRequest();
 
         try {
             BufferedReader br = hsr.getReader();
-            String jsonString = br.readLine();
+            String contents = br.readLine();
             br.close();
 
-            if ((jsonString == null) || jsonString.isEmpty()) {
+            if ((contents == null) || contents.isEmpty()) {
                 // No JSON
                 return null;
             } else {
                 // Got JSON
-                return jsonString;
+                return contents;
             }
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
+    }
+
+    protected String getAngularPluginConfiguration(String key) {
+        if (key == null || key.equals("")) {
+            key = PluginConstants.ANGULAR_FIELD_CONFIGURATION;
+        }
+
+        // Get the data from getPluginConfig().getString(key);
+        return this.getPluginConfig().getString(key, "{}");
     }
 
     private class GetModelDataBehaviour extends AbstractCustomPluginBehavior {
@@ -247,7 +255,7 @@ public abstract class AbstractAngularFieldPlugin extends RenderPlugin<Node> impl
             RequestCycle requestCycle = RequestCycle.get();
             WebRequest wr = (WebRequest) requestCycle.getRequest();
 
-            String jsonString = AbstractAngularFieldPlugin.this.getJsonFromRequest(wr);
+            String jsonString = AbstractAngularFieldPlugin.this.getContentFromRequest(wr);
             try {
                 AbstractAngularFieldPlugin.this.jcrModelSerializer.appendJsonToNode(
                         AbstractAngularFieldPlugin.this.documentModel.getNode(),
@@ -263,6 +271,27 @@ public abstract class AbstractAngularFieldPlugin extends RenderPlugin<Node> impl
             requestCycle.scheduleRequestHandlerAfterCurrent(
                     new TextRequestHandler("application/json",
                             "UTF-8", fieldJson));
+        }
+    }
+
+    private final class GetPluginConfigurationBehaviour extends AbstractCustomPluginBehavior {
+        private static final long serialVersionUID = 1L;
+
+        public GetPluginConfigurationBehaviour(AngularPluginContext context, String componentTag) {
+            super(context, componentTag);
+        }
+
+        @Override
+        public void onRequest() {
+            RequestCycle requestCycle = RequestCycle.get();
+            WebRequest wr = (WebRequest) requestCycle.getRequest();
+
+            String key = AbstractAngularFieldPlugin.this.getContentFromRequest(wr);
+            String config = AbstractAngularFieldPlugin.this.getAngularPluginConfiguration(key);
+
+            requestCycle.scheduleRequestHandlerAfterCurrent(
+                    new TextRequestHandler("application/json",
+                            "UTF-8", config));
         }
     }
 }

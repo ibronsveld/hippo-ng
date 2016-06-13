@@ -84,6 +84,23 @@ function ngFieldController ($scope, $timeout, $log, $element, $http, $mdDialog) 
     }
   };
 
+  this.getPluginConfig = function() {
+    $log.debug("Get Plugin Configuration");
+    var queryUrl = $element.attr('getPluginConfig');
+    if (queryUrl != undefined) {
+      return $http.get(queryUrl).then(
+          function (response) {
+            return response;
+          },
+          function (httpError) {
+            // translate the error
+            throw httpError.status + " : " +
+            httpError.data;
+          }
+      );
+    };
+  }
+
   /**
    * Gets the associated callback from the element. Provided for utility purposes
    * @param callbackName name of the attribute to look for.
@@ -91,6 +108,27 @@ function ngFieldController ($scope, $timeout, $log, $element, $http, $mdDialog) 
    */
   this.getCallback = function (callbackName) {
     return $element.attr(callbackName);
+  };
+
+  /**
+   * Executes the get method if it can find the call back
+   * @param callbackName
+   * @returns {*} promise
+   */
+  this.executeCall = function (callbackName) {
+    var queryUrl = this.getCallback(callbackName);
+    if (queryUrl != undefined) {
+      return $http.get(queryUrl).then(
+          function (response) {
+            return response;
+          },
+          function (httpError) {
+            // translate the error
+            throw httpError.status + " : " +
+            httpError.data;
+          }
+      );
+    }
   }
 
   /**
