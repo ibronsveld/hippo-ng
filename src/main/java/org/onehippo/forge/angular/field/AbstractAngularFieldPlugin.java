@@ -32,6 +32,7 @@ import org.onehippo.forge.angular.AngularPluginContext;
 import org.onehippo.forge.angular.AngularPluginUtils;
 import org.onehippo.forge.angular.PluginConstants;
 import org.onehippo.forge.angular.behaviors.AbstractCustomPluginBehavior;
+import org.onehippo.forge.angular.behaviors.GetPluginConfigurationBehavior;
 import org.onehippo.forge.angular.jcr.JcrModelSerializer;
 import org.onehippo.forge.angular.behaviors.SwitchPerspectiveBehavior;
 import org.slf4j.Logger;
@@ -101,7 +102,7 @@ public abstract class AbstractAngularFieldPlugin extends RenderPlugin<Node> impl
         angularFieldPanel.add(new UpdateModelDataBehaviour(fieldContext, "setModel"));
         angularFieldPanel.add(new GetModelDataBehaviour(fieldContext, "getModel"));
         angularFieldPanel.add(new SwitchPerspectiveBehavior(fieldContext, "switchPerspective"));
-        angularFieldPanel.add(new GetPluginConfigurationBehaviour(fieldContext, "getPluginConfig"));
+        angularFieldPanel.add(new GetPluginConfigurationBehavior(fieldContext, "getPluginConfig"));
 
         if (isEditMode()) {
             angularFieldPanel.add(new AttributeModifier("mode", "edit"));
@@ -187,27 +188,6 @@ public abstract class AbstractAngularFieldPlugin extends RenderPlugin<Node> impl
                 .getString("mode", "view")));
     }
 
-    protected String getContentFromRequest(WebRequest wr) {
-        HttpServletRequest hsr =
-                (HttpServletRequest) wr.getContainerRequest();
-
-        try {
-            BufferedReader br = hsr.getReader();
-            String contents = br.readLine();
-            br.close();
-
-            if ((contents == null) || contents.isEmpty()) {
-                // No JSON
-                return null;
-            } else {
-                // Got JSON
-                return contents;
-            }
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-        }
-    }
-
     protected String getAngularPluginConfiguration(String key) {
         if (key == null || key.equals("")) {
             key = PluginConstants.ANGULAR_FIELD_CONFIGURATION;
@@ -255,7 +235,7 @@ public abstract class AbstractAngularFieldPlugin extends RenderPlugin<Node> impl
             RequestCycle requestCycle = RequestCycle.get();
             WebRequest wr = (WebRequest) requestCycle.getRequest();
 
-            String jsonString = AbstractAngularFieldPlugin.this.getContentFromRequest(wr);
+            String jsonString = AngularPluginUtils.getContentFromRequest(wr);
             try {
                 AbstractAngularFieldPlugin.this.jcrModelSerializer.appendJsonToNode(
                         AbstractAngularFieldPlugin.this.documentModel.getNode(),
@@ -271,27 +251,6 @@ public abstract class AbstractAngularFieldPlugin extends RenderPlugin<Node> impl
             requestCycle.scheduleRequestHandlerAfterCurrent(
                     new TextRequestHandler("application/json",
                             "UTF-8", fieldJson));
-        }
-    }
-
-    private final class GetPluginConfigurationBehaviour extends AbstractCustomPluginBehavior {
-        private static final long serialVersionUID = 1L;
-
-        public GetPluginConfigurationBehaviour(AngularPluginContext context, String componentTag) {
-            super(context, componentTag);
-        }
-
-        @Override
-        public void onRequest() {
-            RequestCycle requestCycle = RequestCycle.get();
-            WebRequest wr = (WebRequest) requestCycle.getRequest();
-
-            String key = AbstractAngularFieldPlugin.this.getContentFromRequest(wr);
-            String config = AbstractAngularFieldPlugin.this.getAngularPluginConfiguration(key);
-
-            requestCycle.scheduleRequestHandlerAfterCurrent(
-                    new TextRequestHandler("application/json",
-                            "UTF-8", config));
         }
     }
 }

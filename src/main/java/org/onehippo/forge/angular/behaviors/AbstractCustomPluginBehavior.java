@@ -2,6 +2,8 @@ package org.onehippo.forge.angular.behaviors;
 
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.util.io.IClusterable;
 import org.onehippo.forge.angular.AngularPluginContext;
 import org.slf4j.Logger;
@@ -27,15 +29,15 @@ public abstract class AbstractCustomPluginBehavior extends AbstractAjaxBehavior 
         return service;
     }
 
-
-    @Override
-    public void onRequest() {
-
-    }
+    public abstract void onRequest();
 
     @Override
     protected void onComponentTag(ComponentTag tag) {
         super.onComponentTag(tag);
         tag.put(componentTag, getCallbackUrl());
+    }
+
+    protected AngularPluginContext getContext() {
+        return this.context;
     }
 }
