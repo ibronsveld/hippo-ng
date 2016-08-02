@@ -55,6 +55,15 @@ public class AngularIFramePerspective extends AbstractAngularPerspective impleme
         add(appPanel);
     }
 
+    @Override
+    public void onEvent(Iterator event) {
+        if (event instanceof AjaxRequestTarget) {
+            ((AjaxRequestTarget)event).add(appPanel);
+        }
+        super.onEvent(event);
+    }
+
+
 
     /**
      * This method will switch to the perspective and load the URL based on the action & options

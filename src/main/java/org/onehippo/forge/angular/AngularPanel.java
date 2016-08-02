@@ -1,16 +1,14 @@
-package org.onehippo.forge.angular.field;
+package org.onehippo.forge.angular;
 
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
-import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.request.resource.PackageResourceReference;
-import org.onehippo.forge.angular.AngularPluginContext;
-import org.onehippo.forge.angular.PluginConstants;
+import org.onehippo.forge.angular.field.AngularFieldPlugin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,9 +23,9 @@ public abstract class AngularPanel extends Panel {
     protected final AngularPluginContext context;
 
     protected final String appName;
+
     protected final String id;
     protected final String markupId;
-
     private static final Logger log = LoggerFactory.getLogger(AngularPanel.class);
 
     public AngularPanel(String id, String markupId, AngularPluginContext context, String appName) {
@@ -49,24 +47,32 @@ public abstract class AngularPanel extends Panel {
         this.add(angularField);
     }
 
-    @Override
-    public void renderHead(IHeaderResponse response) {
-
+    private void renderAngular(IHeaderResponse response) {
         response.render(JavaScriptHeaderItem.forReference(new PackageResourceReference(AngularFieldPlugin.class, "angular.js")));
         response.render(JavaScriptHeaderItem.forReference(new PackageResourceReference(AngularFieldPlugin.class, "angular-animate.js")));
         response.render(JavaScriptHeaderItem.forReference(new PackageResourceReference(AngularFieldPlugin.class, "angular-aria.js")));
         response.render(JavaScriptHeaderItem.forReference(new PackageResourceReference(AngularFieldPlugin.class, "angular-messages.js")));
         response.render(JavaScriptHeaderItem.forReference(new PackageResourceReference(AngularFieldPlugin.class, "angular-resource.js")));
-        response.render(JavaScriptHeaderItem.forReference(new PackageResourceReference(AngularFieldPlugin.class, "angular-material.min.js")));
+    }
 
-        // Add the SDK for the Hippo Angular
-        response.render(JavaScriptHeaderItem.forReference(new PackageResourceReference(AngularFieldPlugin.class, "hippoAngularSDK.js")));
+    protected void renderAngularMaterial(IHeaderResponse response) {
+        response.render(JavaScriptHeaderItem.forReference(new PackageResourceReference(AngularFieldPlugin.class, "angular-material.min.js")));
 
         // Add material css
         response.render(CssHeaderItem.forReference(new PackageResourceReference(AngularFieldPlugin.class, "angular-material.css")));
+
         // Add material fonts
         // TODO: Change?
         response.render(CssHeaderItem.forUrl("https://fonts.googleapis.com/icon?family=Material+Icons"));
+    }
+
+    protected AngularPluginContext getContext() {
+        return context;
+    }
+
+    protected void renderPluginScripts(IHeaderResponse response) {
+        // Add the SDK for the Hippo Angular
+        response.render(JavaScriptHeaderItem.forReference(new PackageResourceReference(AngularFieldPlugin.class, "hippoAngularSDK.js")));
 
         String[] cssLinks = context.getPluginConfig().getStringArray(PluginConstants.ANGULAR_FIELD_CSS_URLS);
         if (cssLinks != null && cssLinks.length > 0) {
@@ -84,13 +90,14 @@ public abstract class AngularPanel extends Panel {
                 String javaScript = fieldJS[i];
                 response.render(JavaScriptHeaderItem.forUrl(javaScript));
             }
-
-            response.render(OnDomReadyHeaderItem.forScript("var rootElement = document.querySelector('#" + this.markupId + "');\n" +
-                    "var element = angular.element(rootElement);\n" +
-                    "var isInitialized = element.injector();\n" +
-                    "if (!isInitialized) {\n" +
-                    "\tangular.bootstrap(element, ['" + appName + "']);\n" +
-                    "}\n"));
         }
+    }
+
+    @Override
+    public void renderHead(IHeaderResponse response) {
+
+        renderAngular(response);
+        renderAngularMaterial(response);
+        renderPluginScripts(response);
     }
 }

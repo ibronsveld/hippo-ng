@@ -1,34 +1,34 @@
 # Hippo CMS Angular Support (hippo-ng)
-This project can be used by developers looking to create custom features in Hippo CMS document editor. The purpose of
-this plugin is to remove the (more) complex logic from the presentation and implementation of the actual field.
-## Installation
+This project can be used by developers looking to create custom features in Hippo CMS environment. The purpose of
+this plugin is to hide the CMS specific complexity from the presentation and implementation of the actual.
+## Quick Start Installation
 The first step would be to build the plugin, which can be done by cloning the project and running the `mvn install` command.
-After, open the CMS pom.xml and add the following lines:
+After this, open the CMS pom.xml and add the following lines:
 ```xml
 <dependency>
    <groupId>org.onehippo.forge.angular</groupId>
     <artifactId>hippo-ng</artifactId>
-   <version>1.0.0-SNAPSHOT</version>
+   <version>1.0.1-SNAPSHOT</version>
 </dependency>
 ```
 
-This will enable the CMS to load the dependencies required. This will also add the field to the CMS document type editor,
-as a generic way to add your own fields to the document.
+This will enable the CMS to load the dependencies required.  
 ## Using and extending the plugin
-More information can be found in the docs section.
-### Adding custom behaviours to the field
-More information can be found in the docs section.
+More information can be found in the wiki.
+### Adding custom behaviours to the plugin
+More information can be found in the wiki.
 ### Adding custom data access
 If needed, the plugin can be extended to have customized data storage on JCR level. This is done by modifying the
-JcrModelSerializer.
+JcrModelSerializer. More information can be found in the wiki.
 ## Contributing
 1. Fork it!
-2. Create your feature branch: `git checkout -b my-new-feature`
-3. Commit your changes: `git commit -am 'Add some feature'`
-4. Push to the branch: `git push origin my-new-feature`
+2. Create your feature branch: `git checkout -b my-new-feature` 
+3. Commit your changes: `git commit -am 'Add some feature'` 
+4. Push to the branch: `git push origin my-new-feature` 
 5. Submit a pull request :D
+
 ## History
-TODO: Write history
+This project has been created by Ivo Bronsveld as part of a initiative to make it easier to create plugins for the Hippo CMS editing environment. 
 ## Credits
 TODO: Write credits
 ## License

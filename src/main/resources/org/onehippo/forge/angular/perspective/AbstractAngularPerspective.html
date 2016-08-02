@@ -14,8 +14,14 @@
     * See the License for the specific language governing permissions and
     * limitations under the License.
 -->
-<wicket:extend>
-<div wicket:id="perspective-iframe" style="width:100%;height: 100vh;" frameborder="0">
-</div>
-</wicket:extend>
+<wicket:panel>
+  <div yui:id="angular-perspective-wrapper" class="hippo-panel-plugin">
+    <div yui:id="angular-perspective-center" class="angular-perspective-body" style="clear:both;">
+      <div yui:id="angular-perspective-center-body">
+        <wicket:child/>
+      </div>
+    </div>
+  </div>
+</wicket:panel>
 </html>
+

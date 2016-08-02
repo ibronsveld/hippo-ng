@@ -247,7 +247,6 @@ public abstract class AbstractAngularFieldPlugin extends RenderPlugin<Node> impl
 
             final String fieldJson = AbstractAngularFieldPlugin.this.getModelAsJson();
 
-
             requestCycle.scheduleRequestHandlerAfterCurrent(
                     new TextRequestHandler("application/json",
                             "UTF-8", fieldJson));

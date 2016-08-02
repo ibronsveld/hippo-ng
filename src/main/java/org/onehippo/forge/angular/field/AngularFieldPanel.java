@@ -1,7 +1,10 @@
 package org.onehippo.forge.angular.field;
 
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.hippoecm.frontend.service.IEditor;
+import org.onehippo.forge.angular.AngularPanel;
 import org.onehippo.forge.angular.AngularPluginContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,5 +27,18 @@ public class AngularFieldPanel extends AngularPanel {
     protected boolean isCompareMode() {
         return IEditor.Mode.COMPARE.equals(IEditor.Mode.fromString(context.getPluginConfig()
                 .getString("mode", "view")));
+    }
+
+    @Override
+    public void renderHead(IHeaderResponse response) {
+        super.renderHead(response);
+
+        response.render(OnDomReadyHeaderItem.forScript("var rootElement = document.querySelector('#" + this.markupId + "');\n" +
+                "var element = angular.element(rootElement);\n" +
+                "var isInitialized = element.injector();\n" +
+                "if (!isInitialized) {\n" +
+                "\tangular.bootstrap(element, ['" + appName + "']);\n" +
+                "}\n"));
+
     }
 }

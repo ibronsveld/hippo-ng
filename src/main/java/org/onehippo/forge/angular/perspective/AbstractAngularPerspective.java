@@ -1,9 +1,14 @@
 package org.onehippo.forge.angular.perspective;
 
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.extensions.breadcrumb.IBreadCrumbParticipant;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.repeater.Item;
+import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.Url;
@@ -12,16 +17,23 @@ import org.apache.wicket.request.resource.UrlResourceReference;
 import org.hippoecm.frontend.PluginRequestTarget;
 import org.hippoecm.frontend.plugin.IPluginContext;
 import org.hippoecm.frontend.plugin.config.IPluginConfig;
+import org.hippoecm.frontend.plugins.standards.image.CachingImage;
+import org.hippoecm.frontend.plugins.standards.panelperspective.PanelPlugin;
+import org.hippoecm.frontend.plugins.standards.panelperspective.breadcrumb.PanelPluginBreadCrumbLink;
 import org.hippoecm.frontend.plugins.standards.perspective.Perspective;
 import org.hippoecm.frontend.plugins.yui.layout.WireframeBehavior;
 import org.hippoecm.frontend.plugins.yui.layout.WireframeSettings;
 import org.hippoecm.frontend.service.IconSize;
+import org.hippoecm.frontend.widgets.AbstractView;
 import org.onehippo.forge.angular.AngularPluginContext;
 import org.onehippo.forge.angular.PluginConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * This abstract perspective class can be used to bootstrap an Angular applications
@@ -35,6 +47,7 @@ public abstract class AbstractAngularPerspective extends Perspective implements 
     private final String PERSPECTIVE_TITLE;
     private final String PERSPECTIVE_ICON;
     private final String PERSPECTIVE_ID;
+    private final String PLUGIN_NAME = "angular-panel";
 
     protected final AngularPluginContext pluginContext;
 
@@ -48,8 +61,6 @@ public abstract class AbstractAngularPerspective extends Perspective implements 
         super(context, config, EVENT_ID);
 
         pluginContext = new AngularPluginContext(context, config);
-
-
         this.setOutputMarkupId(true);
 
         // TODO: Is this required?
@@ -58,6 +69,8 @@ public abstract class AbstractAngularPerspective extends Perspective implements 
             WireframeSettings wfSettings = new WireframeSettings(wfConfig);
             add(new WireframeBehavior(wfSettings));
         }
+
+        //this.add(createPluginPanel());
 
         // Test strings
         PERSPECTIVE_ID = pluginContext.getPluginConfig().getString(PluginConstants.ANGULAR_PERSPECTIVE_ID);
@@ -87,6 +100,11 @@ public abstract class AbstractAngularPerspective extends Perspective implements 
         publishEvent(EVENT_PERSPECTIVE_DEACTIVATED);
     }
 
+
+    protected AngularPluginContext getPerspectiveContext() {
+        return this.pluginContext;
+    }
+
     @Override
     public void render(final PluginRequestTarget target) {
         super.render(target);
@@ -102,12 +120,44 @@ public abstract class AbstractAngularPerspective extends Perspective implements 
         super.renderHead(response);
     }
 
-    @Override
-    public void onEvent(Iterator event) {
-        if (event instanceof AjaxRequestTarget) {
-            ((AjaxRequestTarget)event).add(appPanel);
+    protected AngularPerspectivePanel createAngularPerspectivePanel(String id, String markupId, AngularPluginContext context, String appName) {
+
+        // Create instance of the Model Serializer class
+        if (!getPluginConfig().containsKey(PluginConstants.ANGULAR_PERSPECTIVE_PLUGIN_CLASS)) {
+            log.warn("no plugin class defined for the perspective");
+            return null;
         }
-        super.onEvent(event);
+
+        final String perspectivePanel = getPluginConfig().getString(PluginConstants.ANGULAR_PERSPECTIVE_PLUGIN_CLASS);
+
+        if (perspectivePanel != null && !perspectivePanel.equals("")) {
+            try {
+                Class dialogClass = Class.forName(perspectivePanel);
+                //String id, String markupId, AngularPluginContext context, String appName
+                final Constructor constructor = dialogClass.getConstructor(String.class, String.class, AngularPluginContext.class, String.class);
+
+                AngularPerspectivePanel angularPerspectivePanel = (AngularPerspectivePanel) constructor.newInstance(id, markupId, context, appName);
+                angularPerspectivePanel.setOutputMarkupId(true);
+                return angularPerspectivePanel;
+
+            } catch (ClassNotFoundException e) {
+                log.error("Cannot create dialog with name '{}'", perspectivePanel, e);
+            } catch (NoSuchMethodException e) {
+                log.error("Cannot create dialog with name '{}'", perspectivePanel, e);
+            } catch (InvocationTargetException e) {
+                log.error("Cannot create dialog with name '{}'", perspectivePanel, e);
+            } catch (InstantiationException e) {
+                log.error("Cannot create dialog with name '{}'", perspectivePanel, e);
+            } catch (IllegalAccessException e) {
+                log.error("Cannot create dialog with name '{}'", perspectivePanel, e);
+            }
+        }
+        return null;
+    }
+
+    protected AngularPanelPlugin createPluginPanel() {
+        AngularPanelPlugin plugin = (AngularPanelPlugin)this.pluginContext.getPluginContext().getService(PLUGIN_NAME, AngularPanelPlugin.class);
+        return plugin;
     }
 
     /**
