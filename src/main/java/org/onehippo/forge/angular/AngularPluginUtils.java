@@ -16,6 +16,7 @@ public class AngularPluginUtils {
         return "ng-" + appName + "-" + randomValue;
     }
 
+    @Deprecated
     public static String getContentFromRequest(WebRequest wr) {
         HttpServletRequest hsr =
                 (HttpServletRequest) wr.getContainerRequest();

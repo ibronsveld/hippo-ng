@@ -13,16 +13,24 @@ public class GetPluginConfigurationBehavior extends AbstractCustomPluginBehavior
         super(context, componentTag);
     }
 
+
     @Override
-    public void onRequest() {
-        RequestCycle requestCycle = RequestCycle.get();
-        WebRequest wr = (WebRequest) requestCycle.getRequest();
-
-        String key = AngularPluginUtils.getContentFromRequest(wr);
+    public void doRequest(PluginRequest pluginRequest, PluginResponse pluginResponse) {
+        String key = pluginRequest.getRequestBodyAsString();
         String config = this.getContext().getAngularPluginConfiguration(key);
-
-        requestCycle.scheduleRequestHandlerAfterCurrent(
-                new TextRequestHandler("application/json",
-                        "UTF-8", config));
+        pluginResponse.addResponseBody(config);
     }
+
+//    @Override
+//    public void onRequest() {
+//        RequestCycle requestCycle = RequestCycle.get();
+//        WebRequest wr = (WebRequest) requestCycle.getRequest();
+//
+//        String key = AngularPluginUtils.getContentFromRequest(wr);
+//        String config = this.getContext().getAngularPluginConfiguration(key);
+//
+//        requestCycle.scheduleRequestHandlerAfterCurrent(
+//                new TextRequestHandler("application/json",
+//                        "UTF-8", config));
+//    }
 }
