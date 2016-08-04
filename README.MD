@@ -8,7 +8,7 @@ After, open the CMS pom.xml and add the following lines:
 <dependency>
    <groupId>org.onehippo.forge.angular</groupId>
     <artifactId>hippo-ng</artifactId>
-   <version>1.0.0-SNAPSHOT</version>
+   <version>1.0.2-SNAPSHOT</version>
 </dependency>
 ```
 
