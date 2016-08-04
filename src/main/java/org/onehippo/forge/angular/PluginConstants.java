@@ -16,6 +16,7 @@ public class PluginConstants {
     public final static String ANGULAR_PERSPECTIVE_URL = "angular.perspective.url";
     public final static String ANGULAR_PERSPECTIVE_TITLE = "angular.perspective.title";
     public final static String ANGULAR_PERSPECTIVE_ICON = "angular.perspective.icon";
+    public final static String ANGULAR_PERSPECTIVE_PLUGIN_CLASS = "angular.perspective.plugin";
 
     public final static String MODEL_SERIALIZER = "model.serializer";
     public final static String DEFAULT_MODEL_SERIALIZER = "org.onehippo.forge.angularfield.jcr.JsonModelSerializer";

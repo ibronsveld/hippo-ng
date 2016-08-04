@@ -177,29 +177,99 @@ sdkApp.directive('ngField',  function () {
   };
 });
 
+
+function ngPerspectiveController($scope, $timeout, $log, $element, $http) {
+  this.getMode = function () {
+    return $scope.mode;
+  }
+
+  this.getUserSessionInfo = function () {
+    $log.debug("Loading userInfo");
+    var queryUrl = this.getCallback('getUserSessionInfo');
+    if (queryUrl != undefined) {
+      return $http.post(queryUrl);
+    }
+  }
+
+  this.getCallback = function (callbackName) {
+    return $element.attr(callbackName);
+  }
+
+  /**
+   * Switches perspectives in the CMS by using the configured {@link org.onehippo.forge.angular.perspective.IAngularPerspectiveService}
+   * @param name name of the service
+   * @param action action to execute (provided to service)
+   * @param option option to pass (provided to service)
+   *
+   */
+  this.switchPerspective = function (name, action, option) {
+    $log.debug("Switching perspectives");
+    var callback = $element.attr('switchPerspective');
+    if (callback != undefined) {
+
+      $log.debug("Calling action " + action + " for name " + name + " with options " + JSON.stringify(option));
+      callback = callback.replace('__ACTION', action);
+      callback = callback.replace('__OPTION', option);
+      callback = callback.replace('__NAME', name);
+
+      eval(callback);
+    }
+  }
+
+  this.getPluginConfig = function() {
+    $log.debug("Get Plugin Configuration");
+    var queryUrl = $element.attr('getPluginConfig');
+    if (queryUrl != undefined) {
+      return $http.get(queryUrl).then(
+          function (response) {
+            return response;
+          },
+          function (httpError) {
+            // translate the error
+            throw httpError.status + " : " +
+            httpError.data;
+          }
+      );
+    };
+  }
+
+  /**
+   * Gets the associated callback from the element. Provided for utility purposes
+   * @param callbackName name of the attribute to look for.
+   * @returns {*} attribute value
+   */
+  this.getCallback = function (callbackName) {
+    return $element.attr(callbackName);
+  };
+
+  /**
+   * Executes the get method if it can find the call back
+   * @param callbackName
+   * @returns {*} promise
+   */
+  this.executeCall = function (callbackName) {
+    var queryUrl = this.getCallback(callbackName);
+    if (queryUrl != undefined) {
+      return $http.get(queryUrl).then(
+          function (response) {
+            return response;
+          },
+          function (httpError) {
+            // translate the error
+            throw httpError.status + " : " +
+            httpError.data;
+          }
+      );
+    }
+  }
+}
+
 sdkApp.directive('ngPerspective', function () {
   return {
     restrict: 'A',
     scope: {
       mode: '='
     },
-    controller: ['$scope', '$timeout', '$log', '$element', '$http', function ($scope, $timeout, $log, $element, $http) {
-
-      this.getMode = function () {
-        return $scope.mode;
-      }
-
-      this.getUserSessionInfo = function () {
-        $log.debug("Loading userInfo");
-        var queryUrl = this.getCallback('getUserSessionInfo');
-        if (queryUrl != undefined) {
-          return $http.post(queryUrl);
-        }
-      }
-
-      this.getCallback = function (callbackName) {
-        return $element.attr(callbackName);
-      }
-    }]
+    controller: ['$scope', '$timeout', '$log', '$element', '$http', ngPerspectiveController]
   };
 });

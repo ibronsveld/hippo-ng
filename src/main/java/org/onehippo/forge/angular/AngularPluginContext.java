@@ -21,6 +21,12 @@ public class AngularPluginContext {
         this.modelSerializer = modelSerializer;
     }
 
+    public AngularPluginContext(IPluginContext context, IPluginConfig config) {
+        this.config = config;
+        this.context = context;
+        this.modelSerializer = null;
+    }
+
     /**
      * Returns the plugin config instance.
      * @return IPluginConfig instance
@@ -45,7 +51,18 @@ public class AngularPluginContext {
         return modelSerializer;
     }
 
+    /**
+     * Gets the configuration of the plugin
+     * @param key (optional) key can be overridden if plugin wants to use a different value
+     * @return value of the CMS
+     */
+    public String getAngularPluginConfiguration(String key) {
+        if (key == null || key.equals("")) {
+            key = PluginConstants.ANGULAR_FIELD_CONFIGURATION;
+        }
 
-
+        // Get the data from getPluginConfig().getString(key);
+        return this.getPluginConfig().getString(key, "{}");
+    }
 
 }
