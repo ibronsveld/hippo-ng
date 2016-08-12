@@ -39,7 +39,7 @@ public abstract class AngularPanel extends Panel {
         MarkupContainer angularField = new WebMarkupContainer("angularfield-directive");
         angularField.setMarkupId("angularfield-directive");
 
-        String pickerDirective = context.getPluginConfig().getString(PluginConstants.ANGULAR_FIELD_DIRECTIVE);
+        String pickerDirective = context.getPluginConfig().getString(PluginConstants.PLUGIN_DIRECTIVE);
         if (pickerDirective != null && !pickerDirective.equals("")) {
             angularField.add(new AttributeModifier(pickerDirective, ""));
         }
@@ -74,7 +74,7 @@ public abstract class AngularPanel extends Panel {
         // Add the SDK for the Hippo Angular
         response.render(JavaScriptHeaderItem.forReference(new PackageResourceReference(AngularFieldPlugin.class, "hippoAngularSDK.js")));
 
-        String[] cssLinks = context.getPluginConfig().getStringArray(PluginConstants.ANGULAR_FIELD_CSS_URLS);
+        String[] cssLinks = context.getPluginConfig().getStringArray(PluginConstants.PLUGIN_CSS_URLS);
         if (cssLinks != null && cssLinks.length > 0) {
             // Add multiple scripts
             for (int i = 0; i < cssLinks.length; i++) {
@@ -83,7 +83,7 @@ public abstract class AngularPanel extends Panel {
             }
         }
 
-        String[] fieldJS = context.getPluginConfig().getStringArray(PluginConstants.ANGULAR_FIELD_JAVASCRIPT_URLS);
+        String[] fieldJS = context.getPluginConfig().getStringArray(PluginConstants.PLUGIN_JAVASCRIPT_URLS);
         if (fieldJS != null && fieldJS.length > 0) {
             // Add multiple scripts
             for (int i = 0; i < fieldJS.length; i++) {

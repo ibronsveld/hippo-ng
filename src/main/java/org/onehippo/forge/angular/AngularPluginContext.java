@@ -1,13 +1,8 @@
 package org.onehippo.forge.angular;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
 import org.hippoecm.frontend.plugin.IPluginContext;
 import org.hippoecm.frontend.plugin.config.IPluginConfig;
 import org.onehippo.forge.angular.jcr.JcrModelSerializer;
-
-import javax.jcr.RepositoryException;
 
 public class AngularPluginContext {
 
@@ -58,7 +53,7 @@ public class AngularPluginContext {
      */
     public String getAngularPluginConfiguration(String key) {
         if (key == null || key.equals("")) {
-            key = PluginConstants.ANGULAR_FIELD_CONFIGURATION;
+            key = PluginConstants.PLUGIN_CONFIGURATION;
         }
 
         // Get the data from getPluginConfig().getString(key);

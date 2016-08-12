@@ -2,19 +2,11 @@ package org.onehippo.forge.angular.perspective;
 
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.request.Url;
-import org.apache.wicket.request.resource.ResourceReference;
-import org.apache.wicket.request.resource.UrlResourceReference;
-import org.hippoecm.frontend.PluginRequestTarget;
 import org.hippoecm.frontend.plugin.IPluginContext;
 import org.hippoecm.frontend.plugin.config.IPluginConfig;
-import org.hippoecm.frontend.plugins.yui.layout.WireframeBehavior;
-import org.hippoecm.frontend.plugins.yui.layout.WireframeSettings;
-import org.hippoecm.frontend.service.IconSize;
 import org.onehippo.forge.angular.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,7 +33,7 @@ public class AngularIFramePerspective extends AbstractAngularPerspective impleme
         super(context, config);
         this.setOutputMarkupId(true);
 
-        perspectiveUrl = config.getString(PluginConstants.ANGULAR_PERSPECTIVE_URL);
+        perspectiveUrl = config.getString(PluginConstants.PLUGIN_PERSPECTIVE_URL);
         srcModel = new Model<String>() {
             @Override
             public String getObject() {

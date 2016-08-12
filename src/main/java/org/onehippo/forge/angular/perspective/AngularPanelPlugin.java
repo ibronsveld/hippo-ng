@@ -1,7 +1,6 @@
 package org.onehippo.forge.angular.perspective;
 
 import org.apache.wicket.AttributeModifier;
-import org.hippoecm.frontend.plugin.IPlugin;
 import org.hippoecm.frontend.plugin.IPluginContext;
 import org.hippoecm.frontend.plugin.config.IPluginConfig;
 import org.hippoecm.frontend.service.render.RenderPlugin;
@@ -25,7 +24,7 @@ public abstract class AngularPanelPlugin extends RenderPlugin {
         super(context, config);
         this.pluginContext = new AngularPluginContext(context, config);
 
-        appName = pluginContext.getPluginConfig().getString(PluginConstants.ANGULAR_FIELD_APPNAME);
+        appName = pluginContext.getPluginConfig().getString(PluginConstants.PLUGIN_APPNAME);
         id = AngularPluginUtils.generateUniqueComponentId(appName, 6);
 
         angularPerspectivePanel = new AngularPerspectivePanel("angular-panel", id, pluginContext, appName);
@@ -34,9 +33,8 @@ public abstract class AngularPanelPlugin extends RenderPlugin {
         this.add(new SwitchPerspectiveBehavior(pluginContext, "switchPerspective"));
         this.add(new GetPluginConfigurationBehavior(pluginContext, "getPluginConfig"));
 
-        this.add(new AttributeModifier("ng-field", ""));
+        this.add(new AttributeModifier(PluginConstants.PLUGIN_SDK_DIRECTIVE, ""));
         this.add(new AttributeModifier("ng-app", appName));
-
 
         add(angularPerspectivePanel);
     }

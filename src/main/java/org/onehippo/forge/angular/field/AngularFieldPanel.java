@@ -6,6 +6,7 @@ import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.hippoecm.frontend.service.IEditor;
 import org.onehippo.forge.angular.AngularPanel;
 import org.onehippo.forge.angular.AngularPluginContext;
+import org.onehippo.forge.angular.PluginConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,7 +18,7 @@ public class AngularFieldPanel extends AngularPanel {
         super(id, markupId, context, appName);
 
         this.setMarkupId(this.markupId);
-        this.add(new AttributeModifier("ng-field", ""));
+        this.add(new AttributeModifier(PluginConstants.PLUGIN_SDK_DIRECTIVE, ""));
     }
 
     protected boolean isEditMode() {

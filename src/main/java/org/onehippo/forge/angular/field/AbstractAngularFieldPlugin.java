@@ -18,9 +18,6 @@ package org.onehippo.forge.angular.field;
 import com.google.gson.*;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.request.handler.TextRequestHandler;
-import org.apache.wicket.request.http.WebRequest;
 import org.hippoecm.frontend.model.IModelReference;
 import org.hippoecm.frontend.model.JcrNodeModel;
 import org.hippoecm.frontend.model.event.IObserver;
@@ -38,9 +35,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
-import javax.servlet.http.HttpServletRequest;
-import java.io.BufferedReader;
-import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
@@ -65,7 +59,7 @@ public abstract class AbstractAngularFieldPlugin extends RenderPlugin<Node> impl
         super(context, config);
         setOutputMarkupId(true);
 
-        APP_NAME = getPluginConfig().getString(PluginConstants.ANGULAR_FIELD_APPNAME);
+        APP_NAME = getPluginConfig().getString(PluginConstants.PLUGIN_APPNAME);
         documentModel = (JcrNodeModel) getModel();
 
         if (isCompareMode()) {
@@ -122,7 +116,7 @@ public abstract class AbstractAngularFieldPlugin extends RenderPlugin<Node> impl
         try {
             Class dialogClass = Class.forName(modelSerializer);
             final Constructor constructor = dialogClass.getConstructor(String.class);
-            String fieldName = getPluginConfig().getString(PluginConstants.ANGULAR_FIELD_NAME);
+            String fieldName = getPluginConfig().getString(PluginConstants.PLUGIN_FIELD_NAME);
             JcrModelSerializer jcrModelSerializer = (JcrModelSerializer) constructor.newInstance(fieldName);
 
             return jcrModelSerializer;
@@ -188,7 +182,7 @@ public abstract class AbstractAngularFieldPlugin extends RenderPlugin<Node> impl
 
     protected String getAngularPluginConfiguration(String key) {
         if (key == null || key.equals("")) {
-            key = PluginConstants.ANGULAR_FIELD_CONFIGURATION;
+            key = PluginConstants.PLUGIN_CONFIGURATION;
         }
 
         // Get the data from getPluginConfig().getString(key);
@@ -211,21 +205,6 @@ public abstract class AbstractAngularFieldPlugin extends RenderPlugin<Node> impl
             final String fieldJson = AbstractAngularFieldPlugin.this.getModelAsJson();
             pluginResponse.addResponseBody(fieldJson);
         }
-
-        //        @Override
-//        public void onRequest() {
-//            RequestCycle requestCycle = RequestCycle.get();
-//
-//            // Serialize the model data in a JSON object
-//            JsonObject jsonObject = new JsonObject();
-//            final Gson gson = new GsonBuilder().create();
-//
-//            final String fieldJson = AbstractAngularFieldPlugin.this.getModelAsJson();
-//
-//            requestCycle.scheduleRequestHandlerAfterCurrent(
-//                    new TextRequestHandler("application/json",
-//                            "UTF-8", fieldJson));
-//        }
     }
     private final class UpdateModelDataBehaviour extends AbstractCustomPluginBehavior {
         private static final long serialVersionUID = 1L;
@@ -250,27 +229,5 @@ public abstract class AbstractAngularFieldPlugin extends RenderPlugin<Node> impl
 
             pluginResponse.addResponseBody(fieldJson);
         }
-
-//        @Override
-//        public void onRequest() {
-//            RequestCycle requestCycle = RequestCycle.get();
-//            WebRequest wr = (WebRequest) requestCycle.getRequest();
-//
-//            String jsonString = AngularPluginUtils.getContentFromRequest(wr);
-//            try {
-//                AbstractAngularFieldPlugin.this.jcrModelSerializer.appendJsonToNode(
-//                        AbstractAngularFieldPlugin.this.documentModel.getNode(),
-//                        jsonString
-//                );
-//            } catch (RepositoryException e) {
-//                e.printStackTrace();
-//            }
-//
-//            final String fieldJson = AbstractAngularFieldPlugin.this.getModelAsJson();
-//
-//            requestCycle.scheduleRequestHandlerAfterCurrent(
-//                    new TextRequestHandler("application/json",
-//                            "UTF-8", fieldJson));
-//        }
     }
 }
