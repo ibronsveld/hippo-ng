@@ -1,5 +1,5 @@
 # Hippo CMS Angular Support (hippo-ng)
-This project can be used by developers looking to create custom features in Hippo CMS document editor. The purpose of
+This project can be used by developers looking to create custom features in Hippo CMS. The purpose of
 this plugin is to remove the (more) complex logic from the presentation and implementation of the actual field.
 ## Installation
 The first step would be to build the plugin, which can be done by cloning the project and running the `mvn install` command.
@@ -51,4 +51,4 @@ TODO: Write history
 ## Credits
 TODO: Write credits
 ## License
-TODO: Write license
+This project is licensed based on the EPL-1.0 license. More information can be found here: http://www.eclipse.org/org/documents/epl-v10.php
