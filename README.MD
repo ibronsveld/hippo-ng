@@ -6,7 +6,7 @@ The first step would be to build the plugin, which can be done by cloning the pr
 After, open the CMS pom.xml and add the following lines:
 ```xml
 <dependency>
-   <groupId>org.onehippo.forge.angular</groupId>
+   <groupId>com.github.ibronsveld.hippo.angular</groupId>
     <artifactId>hippo-ng</artifactId>
    <version>1.1.0</version>
 </dependency>
@@ -26,10 +26,10 @@ If you are using any version before the latest release version, there are some s
 you must take into account. Most of the changes are caused by refactoring during the addition of perspectives 
 in the plugin.
 ### Changes in class names
-Some of the classes were promoted to more generic classes, leading to changes in class names and packages. Check the Installation documentation to see what the correct 
-names should be. 
+Some of the classes were promoted to more generic classes, leading to changes in class names and packages. Next to this, all packages have been renamed to remove the _onehippo_ reference, 
+to reflect the proper ownership of this plugin. Check the Installation documentation to see what the correct names should be.  
 ### Changes in JCR properties
-This is the biggest change. A lot of the properties were still name _angular.field.NAME_. Part of the cleanup was
+This is probably one of the biggest changes. A lot of the properties were still name _angular.field.NAME_. Part of the cleanup was
 the renaming of these properties to something that reflects the more generic nature of these. See the configuration page in the wiki for more details.
 ### Changes in the SDK
 The SDK has been changed to support perspectives as well. It has been renamed to _hngSdk_ and the _executeCall_ method has been deprecated.
@@ -38,7 +38,6 @@ In the next release of the SDK it will be removed. To replace this, two new util
 Executes a get request for the specified method. Returns a promise. 
 ####hngSdk.post(methodName, data)
 Executes a post request for the specified method, sending the _data_ object in the body. Returns a promise. 
-
 
 ## Contributing
 1. Fork it!
