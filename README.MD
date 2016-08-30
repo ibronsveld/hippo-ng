@@ -19,8 +19,8 @@ More information can be found in the wiki.
 ### Adding custom behaviours to the field
 More information can be found in the wiki.
 ### Adding custom data access
-If needed, the plugin can be extended to have customized data storage on JCR level. This is done by modifying the
-JcrModelSerializer.
+If needed, the plugin can be extended to have customized data storage on JCR level. This is done by extending the
+JcrModelSerializer. More information can be found in the wiki.
 ## IMPORTANT: Upgrading the plugin to the 1.1 release version
 If you are using any version before the latest release version, there are some specific things concerning upgrades 
 you must take into account. Most of the changes are caused by refactoring during the addition of perspectives 
@@ -47,8 +47,12 @@ Executes a post request for the specified method, sending the _data_ object in t
 5. Submit a pull request :D
 
 ## History
-TODO: Write history
+v1.1.0 - First Release
+## Plans 
+Things that are on my list to pick up:
+### Removal of parent directive in favor of using a service
+In retrospect, the directive that wrapped the custom directive (for fields) is not really required. Looking to change this for a service later.
 ## Credits
-TODO: Write credits
+Most of the work is my own, while some parts are made possible based on the source of Hippo CMS.
 ## License
 This project is licensed based on the EPL-1.0 license. More information can be found here: http://www.eclipse.org/org/documents/epl-v10.php

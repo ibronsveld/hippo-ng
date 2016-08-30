@@ -3,7 +3,7 @@ var sdkApp = angular.module('hippoAngularSDK', []);
 
 
 /**
- * This is the controller field providing the SDK to the actual plugin
+ * This is the controller providing the SDK to the actual plugin
  * @param $scope dependency
  * @param $timeout
  * @param $log
@@ -153,6 +153,8 @@ function hippoAngularSDK ($scope, $timeout, $log, $element, $http, $mdDialog) {
             httpError.data;
           }
       );
+    } else {
+      throw 'callback not found';
     }
   }
 
@@ -174,22 +176,10 @@ function hippoAngularSDK ($scope, $timeout, $log, $element, $http, $mdDialog) {
             httpError.data;
           }
       );
+    } else {
+      throw 'callback not found';
     }
   }
-
-  /**
-   * Shows an Angular Material Dialog
-   * @param templateDialog Dialog URL
-   * @param controllerFn Controller function
-   * @returns {*} promise
-   */
-  this.showDialog = function (templateDialog, controllerFn) {
-    return $mdDialog.show({
-      controller: controllerFn,
-      templateUrl: templateDialog,
-      parent: angular.element(document.body)
-    });
-  };
 
   /**
    * Switches perspectives in the CMS by using the configured {@link org.onehippo.forge.angular.perspective.IAngularPerspectiveService}
