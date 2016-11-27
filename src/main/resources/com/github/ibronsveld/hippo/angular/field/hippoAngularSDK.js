@@ -45,20 +45,18 @@ function hippoAngularSDK ($scope, $timeout, $log, $element, $http, $mdDialog) {
    */
   this.loadModel = function () {
     $log.debug("Loading model");
-    var queryUrl = $element.attr('getModel');
-    if (queryUrl != undefined) {
-      return $http.post(queryUrl).then(
-          function (response) {
-            $scope.lastUpdate = new Date().toLocaleString();
-            return response;
-          },
-          function (httpError) {
-            // translate the error
-            throw httpError.status + " : " +
-            httpError.data;
-          }
-      )
-    }
+    return this.post('getModel').then(
+        function (response) {
+          $scope.lastUpdate = new Date().toLocaleString();
+          return response;
+        },
+        function (httpError) {
+          // translate the error
+          throw httpError.status + " : " +
+          httpError.data;
+        }
+    );
+
   }
 
   /**
@@ -68,20 +66,17 @@ function hippoAngularSDK ($scope, $timeout, $log, $element, $http, $mdDialog) {
    */
   this.updateModel = function (model) {
     $log.debug("Updating model");
-    var queryUrl = $element.attr('setModel');
-    if (queryUrl != undefined) {
-      return $http.post(queryUrl, model).then(
-          function (response) {
-            $scope.lastChanged = new Date().toLocaleString();
-            return response;
-          },
-          function (httpError) {
-            // translate the error
-            throw httpError.status + " : " +
-            httpError.data;
-          }
-      );
-    }
+    return this.post('setModel', model).then(
+        function (response) {
+          $scope.lastChanged = new Date().toLocaleString();
+          return response;
+        },
+        function (httpError) {
+          // translate the error
+          throw httpError.status + " : " +
+          httpError.data;
+        }
+    );
   };
 
   /**
@@ -90,37 +85,25 @@ function hippoAngularSDK ($scope, $timeout, $log, $element, $http, $mdDialog) {
    */
   this.getPluginConfig = function() {
     $log.debug("Get Plugin Configuration");
-    var queryUrl = $element.attr('getPluginConfig');
-    if (queryUrl != undefined) {
-      return $http.get(queryUrl).then(
-          function (response) {
-            return response;
-          },
-          function (httpError) {
-            // translate the error
-            throw httpError.status + " : " +
-            httpError.data;
-          }
-      );
-    };
+    return this.post('config');
   }
 
   /**
-   * Gets the associated callback from the element. Provided for utility purposes
+   * Gets the associated attribute from the element. Provided for utility purposes
    * @param callbackName name of the attribute to look for.
    * @returns {*} attribute value
    */
-  this.getCallback = function (callbackName) {
+  this.getAttribute = function (callbackName) {
     return $element.attr(callbackName);
   };
 
   /**
-   * DEPRECATED the get method if it can find the call back
+   * @DEPRECATED the get method if it can find the call back
    * @param callbackName
    * @returns {*} promise
    */
   this.executeCall = function (callbackName) {
-    var queryUrl = this.getCallback(callbackName);
+    var queryUrl = this.getAttribute(callbackName);
     if (queryUrl != undefined) {
       return $http.get(queryUrl).then(
           function (response) {
@@ -136,14 +119,20 @@ function hippoAngularSDK ($scope, $timeout, $log, $element, $http, $mdDialog) {
   }
 
   /**
-   * Executes the post method if it can find the call back
-   * @param callbackName
+   * Executes the post method.
+   * @param action
    * @returns {*} promise
    */
-  this.post = function (callbackName, data) {
-    var queryUrl = this.getCallback(callbackName);
+  this.post = function (action, data) {
+    var callbackName = 'post';
+    var queryUrl = this.getAttribute(callbackName);
     if (queryUrl != undefined) {
-      return $http.post(queryUrl, data).then(
+
+      var postData = {};
+      postData.action = action;
+      postData.data = data;
+
+      return $http.post(queryUrl, postData).then(
           function (response) {
             return response;
           },
@@ -159,12 +148,13 @@ function hippoAngularSDK ($scope, $timeout, $log, $element, $http, $mdDialog) {
   }
 
   /**
+   * @DEPRECATED
    * Executes the get method if it can find the call back
    * @param callbackName
    * @returns {*} promise
    */
   this.get = function (callbackName) {
-    var queryUrl = this.getCallback(callbackName);
+    var queryUrl = this.getAttribute(callbackName);
     if (queryUrl != undefined) {
       return $http.get(queryUrl).then(
           function (response) {
@@ -202,14 +192,14 @@ function hippoAngularSDK ($scope, $timeout, $log, $element, $http, $mdDialog) {
     }
   }
 
-  /**
-   * Gets the user information from the CMS
-   * @returns {*}
-   */
-  this.getUserSessionInfo = function () {
-    $log.debug("Loading userInfo");
-    return this.get('getUserSessionInfo');
-  }
+  // /**
+  //  * Gets the user information from the CMS
+  //  * @returns {*}
+  //  */
+  // this.getUserSessionInfo = function () {
+  //   $log.debug("Loading userInfo");
+  //   return this.get('getUserSessionInfo');
+  // }
 }
 
 sdkApp.directive('hngSdk',  function () {

@@ -13,6 +13,7 @@ public class PluginRequest {
     protected final WebRequest webRequest;
     protected final HttpServletRequest httpServletRequest;
     protected final JsonObject requestBody;
+    protected final JsonElement requestData;
 
     protected PluginRequest(WebRequest webRequest) {
         this.webRequest = webRequest;
@@ -21,19 +22,39 @@ public class PluginRequest {
         // TODO: Figure out a way to handle mime types?
         // For now, assume it is JSON
         requestBody = (JsonObject) this.getRequestBodyAs(JsonObject.class);
+
+        if (requestBody.has("data")) {
+            requestData = requestBody.get("data");
+        } else {
+            requestData = null;
+        }
     }
 
     public String getAction() {
-        return this.getAsString("action");
+        if (requestBody.has("action")) {
+            return requestBody.get("action").getAsString();
+        }
+        return null;
     }
 
     public String getAsString(String attribute) {
         return this.get(attribute).getAsString();
     }
 
+    /**
+     * Returns the JsonElement as part of the data element.
+     * @param attribute
+     * @return
+     */
     public JsonElement get(String attribute) {
-        if (requestBody.has(attribute)) {
-            return requestBody.get(attribute);
+        // The SDK will always embed the actual request in the 'data' attribute.
+        if (requestData != null) {
+            if (requestData.isJsonObject()) {
+                JsonObject jsonObject = requestData.getAsJsonObject();
+                if (jsonObject.has(attribute)) {
+                    return jsonObject.get(attribute);
+                }
+            }
         }
         return null;
     }

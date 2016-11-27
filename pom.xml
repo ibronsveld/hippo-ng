@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
 
 
-    <name>Angular Support for Document Editor</name>
+    <name>Angular Support for HippoCMS</name>
     <description>Hippo CMS Angular Support</description>
     <groupId>com.github.ibronsveld.hippo.angular</groupId>
     <artifactId>hippo-ng</artifactId>
