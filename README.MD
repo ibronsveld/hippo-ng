@@ -31,13 +31,16 @@ to reflect the proper ownership of this plugin. Check the Installation documenta
 ### Changes in JCR properties
 This is probably one of the biggest changes. A lot of the properties were still name _angular.field.NAME_. Part of the cleanup was
 the renaming of these properties to something that reflects the more generic nature of these. See the configuration page in the wiki for more details.
+### Changes in the handling of requests
+While actively working with the plugin, it quickly became apparent that behaviors would run wild (pun intended). In other words, adding
+ custom behaviors became a very boring task. To handle this with more ease (and to seperate things even more from the wicket world) a new
+ concept has been introduced: the requesthandler. This allows you to register a handler for any request. By doing so, you can
+  create just one or more handlers for your project, rather than adding more and more custom behaviors.
 ### Changes in the SDK
 The SDK has been changed to support perspectives as well. It has been renamed to _hngSdk_ and the _executeCall_ method has been deprecated.
-In the next release of the SDK it will be removed. To replace this, two new utility methods are provided:
-####hngSdk.get(methodName)
-Executes a get request for the specified method. Returns a promise. 
-####hngSdk.post(methodName, data)
-Executes a post request for the specified method, sending the _data_ object in the body. Returns a promise. 
+In the next release of the SDK it will be removed. The entire :
+####hngSdk.post(action, data)
+Executes a post request for the specified action, sending the _data_ object in the body. Returns a promise. 
 
 ## Contributing
 1. Fork it!

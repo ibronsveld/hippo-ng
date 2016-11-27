@@ -12,13 +12,34 @@ public class PluginRequest {
 
     protected final WebRequest webRequest;
     protected final HttpServletRequest httpServletRequest;
+    protected final JsonObject requestBody;
 
     protected PluginRequest(WebRequest webRequest) {
         this.webRequest = webRequest;
         this.httpServletRequest = (HttpServletRequest) webRequest.getContainerRequest();
+
+        // TODO: Figure out a way to handle mime types?
+        // For now, assume it is JSON
+        requestBody = (JsonObject) this.getRequestBodyAs(JsonObject.class);
     }
 
-    public String getRequestBodyAsString() {
+    public String getAction() {
+        return this.getAsString("action");
+    }
+
+    public String getAsString(String attribute) {
+        return this.get(attribute).getAsString();
+    }
+
+    public JsonElement get(String attribute) {
+        if (requestBody.has(attribute)) {
+            return requestBody.get(attribute);
+        }
+        return null;
+    }
+
+    @Deprecated
+    private String getRequestBodyAsString() {
         try {
             BufferedReader br = httpServletRequest.getReader();
             String contents = br.readLine();
@@ -30,8 +51,7 @@ public class PluginRequest {
             throw new RuntimeException(ex);
         }
     }
-
-    public Object getRequestBodyAs(Class clazz) {
+    private Object getRequestBodyAs(Class clazz) {
         try {
             String contents = this.getRequestBodyAsString();
 

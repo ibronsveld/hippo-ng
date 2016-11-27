@@ -7,7 +7,7 @@ public class PluginResponse {
 
     protected String responseBody;
     protected int resultCode;
-    protected PluginResponse() {
+    public PluginResponse() {
         resultCode = 200;
     }
 

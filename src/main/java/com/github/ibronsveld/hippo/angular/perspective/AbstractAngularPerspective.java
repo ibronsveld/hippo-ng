@@ -80,7 +80,6 @@ public abstract class AbstractAngularPerspective extends Perspective implements 
         publishEvent(EVENT_PERSPECTIVE_DEACTIVATED);
     }
 
-
     protected AngularPluginContext getPerspectiveContext() {
         return this.pluginContext;
     }

@@ -3,7 +3,7 @@ package com.github.ibronsveld.hippo.angular.perspective;
 import com.github.ibronsveld.hippo.angular.AngularPluginContext;
 import com.github.ibronsveld.hippo.angular.AngularPluginUtils;
 import com.github.ibronsveld.hippo.angular.PluginConstants;
-import com.github.ibronsveld.hippo.angular.behaviors.GetPluginConfigurationBehavior;
+import com.github.ibronsveld.hippo.angular.behaviors.PluginHandlerBehavior;
 import com.github.ibronsveld.hippo.angular.behaviors.SwitchPerspectiveBehavior;
 import org.apache.wicket.AttributeModifier;
 import org.hippoecm.frontend.plugin.IPluginContext;
@@ -31,7 +31,7 @@ public abstract class AngularPanelPlugin extends RenderPlugin {
 
         // Add the default behaviours to the mix
         this.add(new SwitchPerspectiveBehavior(pluginContext, "switchPerspective"));
-        this.add(new GetPluginConfigurationBehavior(pluginContext, "getPluginConfig"));
+        this.add(new PluginHandlerBehavior(pluginContext));
 
         this.add(new AttributeModifier(PluginConstants.PLUGIN_SDK_DIRECTIVE, ""));
         this.add(new AttributeModifier("ng-app", appName));

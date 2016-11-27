@@ -44,11 +44,6 @@ public abstract class AbstractAngularFieldPlugin extends RenderPlugin<Node> impl
 
     private static final Logger log = LoggerFactory.getLogger(AbstractAngularFieldPlugin.class);
 
-    private JcrNodeModel documentModel;
-    private JcrNodeModel compareBaseDocumentModel;
-
-    private final JcrModelSerializer jcrModelSerializer;
-
     private final AngularPluginContext fieldContext;
     private final String APP_NAME;
     private final String UNIQUE_COMPONENT_ID;
@@ -60,7 +55,8 @@ public abstract class AbstractAngularFieldPlugin extends RenderPlugin<Node> impl
         setOutputMarkupId(true);
 
         APP_NAME = getPluginConfig().getString(PluginConstants.PLUGIN_APPNAME);
-        documentModel = (JcrNodeModel) getModel();
+        JcrNodeModel documentModel = (JcrNodeModel) getModel();
+        JcrNodeModel compareBaseDocumentModel = null;
 
         if (isCompareMode()) {
 
@@ -85,16 +81,18 @@ public abstract class AbstractAngularFieldPlugin extends RenderPlugin<Node> impl
         }
 
         // Store the Model Serializer to use
-        jcrModelSerializer = createModelSerializerInstance();
-        fieldContext = new AngularPluginContext(context, config, jcrModelSerializer);
+        JcrModelSerializer jcrModelSerializer = createModelSerializerInstance();
+        fieldContext = new AngularPluginContext(context, config, jcrModelSerializer, documentModel, compareBaseDocumentModel);
 
         UNIQUE_COMPONENT_ID = AngularPluginUtils.generateUniqueComponentId(APP_NAME, 6);
 
         angularFieldPanel = new AngularFieldPanel("angularfield-container", UNIQUE_COMPONENT_ID, fieldContext, APP_NAME);
-        angularFieldPanel.add(new UpdateModelDataBehaviour(fieldContext, "setModel"));
-        angularFieldPanel.add(new GetModelDataBehaviour(fieldContext, "getModel"));
+
+        // Processing request handlers
+        angularFieldPanel.add(new PluginHandlerBehavior(fieldContext));
+        // Adding a perspective switch behavior
         angularFieldPanel.add(new SwitchPerspectiveBehavior(fieldContext, "switchPerspective"));
-        angularFieldPanel.add(new GetPluginConfigurationBehavior(fieldContext, "getPluginConfig"));
+
 
         if (isEditMode()) {
             angularFieldPanel.add(new AttributeModifier("mode", "edit"));
@@ -140,36 +138,6 @@ public abstract class AbstractAngularFieldPlugin extends RenderPlugin<Node> impl
         return angularFieldPanel;
     }
 
-    protected JcrNodeModel getCompareBaseDocumentModel() {
-        return compareBaseDocumentModel;
-    }
-
-    protected JcrNodeModel getDocumentModel() {
-        return documentModel;
-    }
-
-    public String getModelAsJson() {
-        JsonObject jsonObject = new JsonObject();
-        final Gson gson = new GsonBuilder().create();
-
-        try {
-            JsonObject modelObject = new JsonObject();
-            modelObject = AbstractAngularFieldPlugin.this.jcrModelSerializer.convertNodeToJson(modelObject, documentModel.getNode());
-            jsonObject.add("model", modelObject);
-
-            if (compareBaseDocumentModel != null) {
-                JsonObject compareObject = new JsonObject();
-                compareObject = AbstractAngularFieldPlugin.this.jcrModelSerializer.convertNodeToJson(compareObject, compareBaseDocumentModel.getNode());
-                jsonObject.add("compareModel", compareObject);
-            } else {
-                //jsonObject.add("compareModel", "");
-            }
-
-        } catch (RepositoryException e) {
-            e.printStackTrace();
-        }
-        return jsonObject.toString();
-    }
 
     protected boolean isEditMode() {
         return IEditor.Mode.EDIT.equals(IEditor.Mode.fromString(getPluginConfig().getString("mode", "view")));
@@ -189,45 +157,4 @@ public abstract class AbstractAngularFieldPlugin extends RenderPlugin<Node> impl
         return this.getPluginConfig().getString(key, "{}");
     }
 
-    private class GetModelDataBehaviour extends AbstractCustomPluginBehavior {
-        private static final long serialVersionUID = 1L;
-
-        private AngularPluginContext context;
-        private String componentTag;
-        private JcrNodeModel model;
-
-        public GetModelDataBehaviour(AngularPluginContext context, String componentTag) {
-            super(context, componentTag);
-        }
-
-        @Override
-        public void doRequest(PluginRequest pluginRequest, PluginResponse pluginResponse) {
-            final String fieldJson = AbstractAngularFieldPlugin.this.getModelAsJson();
-            pluginResponse.addResponseBody(fieldJson);
-        }
-    }
-    private final class UpdateModelDataBehaviour extends AbstractCustomPluginBehavior {
-        private static final long serialVersionUID = 1L;
-
-        public UpdateModelDataBehaviour(AngularPluginContext context, String componentTag) {
-            super(context, componentTag);
-        }
-
-        @Override
-        public void doRequest(PluginRequest pluginRequest, PluginResponse pluginResponse) {
-            String jsonString = pluginRequest.getRequestBodyAsString();
-            try {
-                AbstractAngularFieldPlugin.this.jcrModelSerializer.appendJsonToNode(
-                        AbstractAngularFieldPlugin.this.documentModel.getNode(),
-                        jsonString
-                );
-            } catch (RepositoryException e) {
-                e.printStackTrace();
-            }
-
-            final String fieldJson = AbstractAngularFieldPlugin.this.getModelAsJson();
-
-            pluginResponse.addResponseBody(fieldJson);
-        }
-    }
 }

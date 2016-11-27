@@ -5,6 +5,7 @@ public class PluginConstants {
     public static final String PARAM_CONTAINER_VISIBLE = "field.visible";
     public static final String DEFAULT_FIELD_CAPTION = "Data";
     public final static String DEFAULT_MODEL_SERIALIZER = "SimpleModelSerializer";
+    public final static String PLUGIN_REQUEST_HANDLERS = "hippo-ng.requesthandlers";
 
     public final static String PLUGIN_JAVASCRIPT_URLS = "hippo-ng.javascript.urls";
     public final static String PLUGIN_CSS_URLS = "hippo-ng.css.urls";

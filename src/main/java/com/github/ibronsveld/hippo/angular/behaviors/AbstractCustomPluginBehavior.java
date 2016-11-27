@@ -10,7 +10,7 @@ import org.apache.wicket.request.http.handler.ErrorCodeRequestHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
+@Deprecated
 public abstract class AbstractCustomPluginBehavior extends AbstractAjaxBehavior {
 
     private static final Logger log = LoggerFactory.getLogger(AbstractCustomPluginBehavior.class);
