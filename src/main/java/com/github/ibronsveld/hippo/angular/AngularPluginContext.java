@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import javax.jcr.RepositoryException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 
 public class AngularPluginContext {
 
@@ -112,12 +113,13 @@ public class AngularPluginContext {
         if (handlers != null && handlers.length > 0) {
 
             // There is always the default one
-            IPluginRequestHandler[] pluginRequestHandlers = new IPluginRequestHandler[handlers.length+1];
-            pluginRequestHandlers[0] = new DefaultPluginRequestHandler(this);
+            ArrayList<IPluginRequestHandler> requestHandlerList = new ArrayList<>();
 
-            for (int i=1; i < pluginRequestHandlers.length; i++) {
+            requestHandlerList.add(new DefaultPluginRequestHandler(this));
+
+            for (int i=0; i < handlers.length; i++) {
                 // Because of the default handler, check the right index
-                String handler = handlers[i-1];
+                String handler = handlers[i];
                 if (!handler.equals("")) {
                     try {
                         Class handlerClass = Class.forName(handler);
@@ -125,7 +127,9 @@ public class AngularPluginContext {
 
                         final Constructor constructor = handlerClass.getConstructor(AngularPluginContext.class);
                         IPluginRequestHandler pluginRequestHandler = (IPluginRequestHandler) constructor.newInstance(this);
-                        pluginRequestHandlers[i] = pluginRequestHandler;
+                        if (pluginRequestHandler != null) {
+                            requestHandlerList.add(pluginRequestHandler);
+                        }
 
                     } catch (ClassNotFoundException e) {
                         log.error("Cannot create handler with name '{}'", handler, e);
@@ -141,7 +145,8 @@ public class AngularPluginContext {
                 }
             }
 
-            return pluginRequestHandlers;
+            IPluginRequestHandler[] pluginRequestHandlers = new IPluginRequestHandler[requestHandlerList.size()];
+            return requestHandlerList.toArray(pluginRequestHandlers);
 
         } else {
             IPluginRequestHandler[] pluginRequestHandlers = new IPluginRequestHandler[1];
