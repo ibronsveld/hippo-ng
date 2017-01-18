@@ -118,24 +118,26 @@ public class AngularPluginContext {
             for (int i=1; i < pluginRequestHandlers.length; i++) {
                 // Because of the default handler, check the right index
                 String handler = handlers[i-1];
-                try {
-                    Class handlerClass = Class.forName(handler);
-                    IPluginRequestHandler.class.isAssignableFrom(handlerClass);
+                if (!handler.equals("")) {
+                    try {
+                        Class handlerClass = Class.forName(handler);
+                        IPluginRequestHandler.class.isAssignableFrom(handlerClass);
 
-                    final Constructor constructor = handlerClass.getConstructor(AngularPluginContext.class);
-                    IPluginRequestHandler pluginRequestHandler = (IPluginRequestHandler)constructor.newInstance(this);
-                    pluginRequestHandlers[i] = pluginRequestHandler;
+                        final Constructor constructor = handlerClass.getConstructor(AngularPluginContext.class);
+                        IPluginRequestHandler pluginRequestHandler = (IPluginRequestHandler) constructor.newInstance(this);
+                        pluginRequestHandlers[i] = pluginRequestHandler;
 
-                } catch (ClassNotFoundException e) {
-                    log.error("Cannot create handler with name '{}'", handler, e);
-                } catch (NoSuchMethodException e) {
-                    log.error("Cannot create handler with name '{}'", handler, e);
-                } catch (IllegalAccessException e) {
-                    log.error("Cannot create handler with name '{}'", handler, e);
-                } catch (InstantiationException e) {
-                    log.error("Cannot create handler with name '{}'", handler, e);
-                } catch (InvocationTargetException e) {
-                    log.error("Cannot create handler with name '{}'", handler, e);
+                    } catch (ClassNotFoundException e) {
+                        log.error("Cannot create handler with name '{}'", handler, e);
+                    } catch (NoSuchMethodException e) {
+                        log.error("Cannot create handler with name '{}'", handler, e);
+                    } catch (IllegalAccessException e) {
+                        log.error("Cannot create handler with name '{}'", handler, e);
+                    } catch (InstantiationException e) {
+                        log.error("Cannot create handler with name '{}'", handler, e);
+                    } catch (InvocationTargetException e) {
+                        log.error("Cannot create handler with name '{}'", handler, e);
+                    }
                 }
             }
 
