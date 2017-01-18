@@ -1,6 +1,7 @@
 package com.github.ibronsveld.hippo.angular;
 
 import com.github.ibronsveld.hippo.angular.field.AbstractAngularFieldPlugin;
+import com.github.ibronsveld.hippo.angular.handlers.DefaultPluginRequestHandler;
 import com.github.ibronsveld.hippo.angular.handlers.IPluginRequestHandler;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -106,13 +107,17 @@ public class AngularPluginContext {
      * @return
      */
     private IPluginRequestHandler[] createAndInstantiateHandlers() {
+        // Start with basic handler
         String[] handlers = this.getPluginConfig().getStringArray(PluginConstants.PLUGIN_REQUEST_HANDLERS);
         if (handlers != null && handlers.length > 0) {
 
-            IPluginRequestHandler[] pluginRequestHandlers = new IPluginRequestHandler[handlers.length];
+            // There is always the default one
+            IPluginRequestHandler[] pluginRequestHandlers = new IPluginRequestHandler[handlers.length+1];
+            pluginRequestHandlers[0] = new DefaultPluginRequestHandler(this);
 
-            for (int i=0; i < handlers.length; i++) {
-                String handler = handlers[i];
+            for (int i=1; i < pluginRequestHandlers.length; i++) {
+                // Because of the default handler, check the right index
+                String handler = handlers[i-1];
                 try {
                     Class handlerClass = Class.forName(handler);
                     IPluginRequestHandler.class.isAssignableFrom(handlerClass);
@@ -137,7 +142,9 @@ public class AngularPluginContext {
             return pluginRequestHandlers;
 
         } else {
-            return null;
+            IPluginRequestHandler[] pluginRequestHandlers = new IPluginRequestHandler[1];
+            pluginRequestHandlers[0] = new DefaultPluginRequestHandler(this);
+            return pluginRequestHandlers;
         }
     }
 

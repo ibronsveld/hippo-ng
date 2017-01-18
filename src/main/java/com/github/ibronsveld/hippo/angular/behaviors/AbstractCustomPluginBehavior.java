@@ -28,7 +28,12 @@ public abstract class AbstractCustomPluginBehavior extends AbstractAjaxBehavior 
         RequestCycle requestCycle = RequestCycle.get();
         WebRequest webRequest = (WebRequest) requestCycle.getRequest();
 
-        PluginRequest pluginRequest = new PluginRequest(webRequest);
+        PluginRequest pluginRequest = null;
+        try {
+            pluginRequest = new PluginRequest(webRequest);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         PluginResponse pluginResponse = new PluginResponse();
 
         this.doRequest(pluginRequest, pluginResponse);

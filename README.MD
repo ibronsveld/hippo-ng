@@ -32,10 +32,12 @@ to reflect the proper ownership of this plugin. Check the Installation documenta
 This is probably one of the biggest changes. A lot of the properties were still name _angular.field.NAME_. Part of the cleanup was
 the renaming of these properties to something that reflects the more generic nature of these. See the configuration page in the wiki for more details.
 ### Changes in the handling of requests
-While actively working with the plugin, it quickly became apparent that behaviors would run wild (pun intended). In other words, adding
+While actively working with the plugin, it quickly became clear that behaviors would run wild (pun intended). In other words, adding
  custom behaviors became a very boring task. To handle this with more ease (and to seperate things even more from the wicket world) a new
  concept has been introduced: the requesthandler. This allows you to register a handler for any request. By doing so, you can
   create just one or more handlers for your project, rather than adding more and more custom behaviors.
+  
+  These are configured in the settings of the panel, by adding the custom class names in the _hippo-ng.requesthandlers_ property.
 ### Changes in the SDK
 The SDK has been changed to support perspectives as well. It has been renamed to _hngSdk_ and the _executeCall_ method has been deprecated.
 In the next release of the SDK it will be removed. The entire :

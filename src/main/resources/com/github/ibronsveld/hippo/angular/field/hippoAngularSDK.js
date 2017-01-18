@@ -11,7 +11,7 @@ var sdkApp = angular.module('hippoAngularSDK', []);
  * @param $http
  * @param $mdDialog
  */
-function hippoAngularSDK ($scope, $timeout, $log, $element, $http, $mdDialog) {
+function hippoAngularSDK($scope, $timeout, $log, $element, $http, $mdDialog) {
 
   /**
    * Gets the last time the model has been updated through the API
@@ -83,7 +83,7 @@ function hippoAngularSDK ($scope, $timeout, $log, $element, $http, $mdDialog) {
    * Gets the configuration of the plugin in the Hippo Repository
    * @returns {*}
    */
-  this.getPluginConfig = function() {
+  this.getPluginConfig = function () {
     $log.debug("Get Plugin Configuration");
     return this.post('config');
   }
@@ -116,6 +116,33 @@ function hippoAngularSDK ($scope, $timeout, $log, $element, $http, $mdDialog) {
           }
       );
     }
+  };
+
+  /**
+   * This will return the data from the response. When index is supplied, this is the result that will be returned.
+   * @param response Response to process
+   * @param index to return. When not supplied, first result will be returned
+   */
+  this.processResponse = function (response, index) {
+    if (index == undefined || index < 0) {
+      index = 0;
+    }
+    if (response != undefined) {
+      if (response.hasOwnProperty('data')) {
+        if (Array.isArray(response.data)) {
+          // Process data
+          if (response.data.length >= 1) {
+            if (index <= response.data.length-1) {
+              return response.data[index];
+            } else {
+              throw "index out of range";
+            }
+          }
+        } else {
+          // What now?
+        }
+      }
+    }
   }
 
   /**
@@ -134,6 +161,9 @@ function hippoAngularSDK ($scope, $timeout, $log, $element, $http, $mdDialog) {
 
       return $http.post(queryUrl, postData).then(
           function (response) {
+            // The result will be encapsulated in a responseBody object
+            // and a resultCode
+            // Data can be an array, based on the fact that a single response can return multiple results
             return response;
           },
           function (httpError) {
@@ -202,7 +232,7 @@ function hippoAngularSDK ($scope, $timeout, $log, $element, $http, $mdDialog) {
   // }
 }
 
-sdkApp.directive('hngSdk',  function () {
+sdkApp.directive('hngSdk', function () {
   return {
     restrict: 'A',
     scope: {

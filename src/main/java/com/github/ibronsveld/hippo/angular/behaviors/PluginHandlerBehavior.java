@@ -31,27 +31,32 @@ public class PluginHandlerBehavior extends AbstractAjaxBehavior {
         RequestCycle requestCycle = RequestCycle.get();
         WebRequest webRequest = (WebRequest) requestCycle.getRequest();
 
-        PluginRequest pluginRequest = new PluginRequest(webRequest);
+        PluginRequest pluginRequest = null;
+        try {
+            pluginRequest = new PluginRequest(webRequest);
+        } catch (Exception e) {
+            log.error("Request data invalid", e);
+        }
 
         List<PluginResponse> responses = new ArrayList<>();
 
         // Get all linked plugin request handlers
         IPluginRequestHandler[] pluginRequestHandlers = this.context.getPluginRequestHandlers();
-        for(IPluginRequestHandler handler : pluginRequestHandlers) {
-            // Check if it can process the request
-            if (handler.canProcess(pluginRequest)) {
-                PluginResponse pluginResponse = handler.process(pluginRequest);
-                responses.add(pluginResponse);
+        if (pluginRequestHandlers != null) {
+            for (IPluginRequestHandler handler : pluginRequestHandlers) {
+                // Check if it can process the request
+                if (handler.canProcess(pluginRequest)) {
+                    PluginResponse pluginResponse = handler.process(pluginRequest);
+                    responses.add(pluginResponse);
+                }
             }
+
+            String responseBody = new GsonBuilder().create().toJson(responses);
+
+            requestCycle.scheduleRequestHandlerAfterCurrent(
+                    new TextRequestHandler("application/json",
+                            "UTF-8", responseBody));
         }
-
-        // Transform the responses in an array
-        PluginResponse[] responseArray = (PluginResponse[]) responses.toArray();
-        String responseBody = new GsonBuilder().create().toJson(responseArray);
-
-        requestCycle.scheduleRequestHandlerAfterCurrent(
-                new TextRequestHandler("application/json",
-                        "UTF-8", responseBody));
     }
 
 
