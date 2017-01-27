@@ -66,7 +66,12 @@ function hippoAngularSDK($scope, $timeout, $log, $element, $http, $mdDialog) {
    */
   this.updateModel = function (model) {
     $log.debug("Updating model");
-    return this.post('setModel', model).then(
+
+    var data = {
+      model: model
+    };
+
+    return this.post('setModel', data).then(
         function (response) {
           $scope.lastChanged = new Date().toLocaleString();
           return response;
