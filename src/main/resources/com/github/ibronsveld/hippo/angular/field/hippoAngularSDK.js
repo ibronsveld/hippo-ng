@@ -241,3 +241,41 @@ sdkApp.directive('hngSdk', function () {
     controller: ['$scope', '$timeout', '$log', '$element', '$http', '$mdDialog', hippoAngularSDK]
   };
 });
+
+/**
+ * Response object that can be used to process the results from the plugin
+ * @param response
+ */
+function pluginResponse(response) {
+
+  this.rawResponse = response;
+
+  if (response.data != undefined) {
+    // TODO: Validate response
+    this.data = response.data;
+  }
+}
+
+pluginResponse.prototype.getFirstResult = function () {
+  return this.getResult(0);
+}
+
+pluginResponse.prototype.getResult = function (idx) {
+  if (this.data != undefined) {
+    if (Array.isArray(this.data)) {
+
+      // if (this.data[idx][''])
+      var responseBody = this.data[idx]['responseBody'];
+
+      return JSON.parse(responseBody);
+    }
+  }
+};
+
+pluginResponse.prototype.getLength = function() {
+  if (this.data != undefined) {
+    if (Array.isArray(this.data)) {
+      return this.data.length;
+    }
+  }
+}

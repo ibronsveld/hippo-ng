@@ -14,8 +14,8 @@ public class DefaultPluginRequestHandler extends AbstractPluginRequestHandler {
     private static final Logger log = LoggerFactory.getLogger(DefaultPluginRequestHandler.class);
 
     private static final String ACTION_CONFIG = "config";
-    private static final String ACTION_UPDATE_MODEL = "setModel";
-    private static final String ACTION_GET_MODEL = "getModel";
+    private static final String ACTION_UPDATE_MODEL = "setmodel";
+    private static final String ACTION_GET_MODEL = "getmodel";
 
     private static final String MODEL_KEY = "model";
 
