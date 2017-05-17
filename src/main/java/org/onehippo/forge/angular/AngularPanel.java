@@ -79,7 +79,10 @@ public abstract class AngularPanel extends Panel {
             // Add multiple scripts
             for (int i = 0; i < cssLinks.length; i++) {
                 String css = cssLinks[i];
-                response.render(CssHeaderItem.forUrl(css));
+                // Ignore if the field is empty
+                if (!css.equals("")) {
+                    response.render(CssHeaderItem.forUrl(css));
+                }
             }
         }
 
