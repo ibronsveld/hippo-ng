@@ -96,6 +96,7 @@ public abstract class AngularPanel extends Panel {
     @Override
     public void renderHead(IHeaderResponse response) {
 
+        // Since 1.1, this plugin no longer renders these
         renderAngular(response);
         renderAngularMaterial(response);
         renderPluginScripts(response);

@@ -40,7 +40,7 @@ public class DefaultPluginRequestHandler extends AbstractPluginRequestHandler {
     private PluginResponse updateModel(PluginRequest pluginRequest) {
         PluginResponse pluginResponse = new PluginResponse();
 
-        String jsonString = pluginRequest.getAsString(MODEL_KEY);
+        String jsonString = pluginRequest.get(MODEL_KEY).toString();
         try {
             this.getPluginContext().getModelSerializer().appendJsonToNode(
                     this.getPluginContext().getDocumentModel().getNode(),

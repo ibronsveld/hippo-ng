@@ -9,7 +9,8 @@ var sdkApp = angular.module('hippoAngularSDK', []);
  * @param $log
  * @param $element
  * @param $http
- * @param $mdDialog
+ * @param $md
+ *Dialog
  */
 function hippoAngularSDK($scope, $timeout, $log, $element, $http, $mdDialog) {
 
