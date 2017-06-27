@@ -47,6 +47,7 @@ public abstract class AngularPanel extends Panel {
         this.add(angularField);
     }
 
+    @Deprecated
     private void renderAngular(IHeaderResponse response) {
         response.render(JavaScriptHeaderItem.forReference(new PackageResourceReference(AngularFieldPlugin.class, "angular.js")));
         response.render(JavaScriptHeaderItem.forReference(new PackageResourceReference(AngularFieldPlugin.class, "angular-animate.js")));
@@ -55,6 +56,7 @@ public abstract class AngularPanel extends Panel {
         response.render(JavaScriptHeaderItem.forReference(new PackageResourceReference(AngularFieldPlugin.class, "angular-resource.js")));
     }
 
+    @Deprecated
     protected void renderAngularMaterial(IHeaderResponse response) {
         response.render(JavaScriptHeaderItem.forReference(new PackageResourceReference(AngularFieldPlugin.class, "angular-material.min.js")));
 
@@ -71,15 +73,14 @@ public abstract class AngularPanel extends Panel {
     }
 
     protected void renderPluginScripts(IHeaderResponse response) {
-        // Add the SDK for the Hippo Angular
-        response.render(JavaScriptHeaderItem.forReference(new PackageResourceReference(AngularFieldPlugin.class, "hippoAngularSDK.js")));
 
         String[] cssLinks = context.getPluginConfig().getStringArray(PluginConstants.PLUGIN_CSS_URLS);
         if (cssLinks != null && cssLinks.length > 0) {
             // Add multiple scripts
             for (int i = 0; i < cssLinks.length; i++) {
                 String css = cssLinks[i];
-                response.render(CssHeaderItem.forUrl(css));
+                if (css != null && css.length() > 0)
+                    response.render(CssHeaderItem.forUrl(css));
             }
         }
 
@@ -88,15 +89,20 @@ public abstract class AngularPanel extends Panel {
             // Add multiple scripts
             for (int i = 0; i < fieldJS.length; i++) {
                 String javaScript = fieldJS[i];
-                response.render(JavaScriptHeaderItem.forUrl(javaScript));
+                if (javaScript != null && javaScript.length() > 0)
+                    response.render(JavaScriptHeaderItem.forUrl(javaScript));
             }
         }
+
+        // Add the SDK for the Hippo Angular
+        response.render(JavaScriptHeaderItem.forReference(new PackageResourceReference(AngularFieldPlugin.class, "hippoAngularSDK.js")));
     }
 
     @Override
     public void renderHead(IHeaderResponse response) {
 
         // Since 1.1, this plugin no longer renders these
+        // TODO: Fix the dependency issues
         renderAngular(response);
         renderAngularMaterial(response);
         renderPluginScripts(response);
