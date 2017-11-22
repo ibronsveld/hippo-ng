@@ -25,10 +25,7 @@ JcrModelSerializer. More information can be found in the wiki.
 If you are using any version before the latest release version, there are some specific things concerning upgrades 
 you must take into account. Most of the changes are caused by refactoring during the addition of perspectives 
 in the plugin.
-### Dependency inclusion
-Previously, Angular, Angular Material and any other dependencies were included by the plugin. In order to make it easier to 
- manage versions, this has been removed from this version of the plugin. Therefore, it is crucial you add these to the configuration
- of the plugin using the _hippo-ng.javascript.urls_ property.
+
 ### Changes in class names
 Some of the classes were promoted to more generic classes, leading to changes in class names and packages. Next to this, all packages have been renamed to remove the _onehippo_ reference, 
 to reflect the proper ownership of this plugin. Check the Installation documentation to see what the correct names should be.  
@@ -61,6 +58,9 @@ v1.1.0 - First Release
 Things that are on my list to pick up:
 ### Removal of parent directive in favor of using a service
 In retrospect, the directive that wrapped the custom directive (for fields) is not really required. Looking to change this for a service later.
+### Dependency inclusion
+Currently, Angular, Angular Material and any other dependencies were included by the plugin. In order to make it easier to 
+ manage versions, this should been removed from this version of the plugin.
 ## Credits
 Most of the work is my own, while some parts are made possible based on the source of Hippo CMS.
 ## License
