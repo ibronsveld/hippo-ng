@@ -48,18 +48,19 @@ public class PluginRequest {
 
     public String getAsString() {
         if (requestData != null) {
-            return requestData.getAsString();
+            return requestData.toString();
         }
         return null;
     }
 
     /**
      * Converts the data to a certain type
+     *
      * @param clazz type to convert to
      * @return instance of the object
      */
     public Object getAsObject(Class clazz) {
-        if (requestData!= null) {
+        if (requestData != null) {
             return this.getRequestBodyAs(requestData, clazz);
         } else {
             return null;
@@ -68,6 +69,7 @@ public class PluginRequest {
 
     /**
      * Returns the JsonElement as part of the data element.
+     *
      * @param attribute
      * @return
      */
