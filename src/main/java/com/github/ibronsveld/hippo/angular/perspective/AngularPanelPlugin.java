@@ -10,7 +10,7 @@ import org.hippoecm.frontend.plugin.IPluginContext;
 import org.hippoecm.frontend.plugin.config.IPluginConfig;
 import org.hippoecm.frontend.service.render.RenderPlugin;
 
-public abstract class AngularPanelPlugin extends RenderPlugin {
+public class AngularPanelPlugin extends RenderPlugin {
 
     private final String id;
     private final String appName;
