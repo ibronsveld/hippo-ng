@@ -19,7 +19,7 @@ public class SimpleModelSerializer extends JcrModelSerializer {
 
     @Override
     public Node appendJsonToNode(Node node, String json) throws RepositoryException {
-        node.setProperty(this.propertyName, json.toString());
+        node.setProperty(this.propertyName, json);
         return node;
     }
 
