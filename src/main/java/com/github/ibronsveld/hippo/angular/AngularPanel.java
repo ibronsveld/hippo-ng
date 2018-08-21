@@ -47,26 +47,7 @@ public abstract class AngularPanel extends Panel {
         this.add(angularField);
     }
 
-    @Deprecated
-    private void renderAngular(IHeaderResponse response) {
-        response.render(JavaScriptHeaderItem.forReference(new PackageResourceReference(AngularFieldPlugin.class, "angular.js")));
-        response.render(JavaScriptHeaderItem.forReference(new PackageResourceReference(AngularFieldPlugin.class, "angular-animate.js")));
-        response.render(JavaScriptHeaderItem.forReference(new PackageResourceReference(AngularFieldPlugin.class, "angular-aria.js")));
-        response.render(JavaScriptHeaderItem.forReference(new PackageResourceReference(AngularFieldPlugin.class, "angular-messages.js")));
-        response.render(JavaScriptHeaderItem.forReference(new PackageResourceReference(AngularFieldPlugin.class, "angular-resource.js")));
-    }
 
-    @Deprecated
-    protected void renderAngularMaterial(IHeaderResponse response) {
-        response.render(JavaScriptHeaderItem.forReference(new PackageResourceReference(AngularFieldPlugin.class, "angular-material.min.js")));
-
-        // Add material css
-        response.render(CssHeaderItem.forReference(new PackageResourceReference(AngularFieldPlugin.class, "angular-material.css")));
-
-        // Add material fonts
-        // TODO: Change?
-        response.render(CssHeaderItem.forUrl("https://fonts.googleapis.com/icon?family=Material+Icons"));
-    }
 
     protected AngularPluginContext getContext() {
         return context;
@@ -103,8 +84,9 @@ public abstract class AngularPanel extends Panel {
 
         // Since 1.1, this plugin no longer renders these
         // TODO: Fix the dependency issues
-        renderAngular(response);
-        renderAngularMaterial(response);
-        renderPluginScripts(response);
+        AngularPluginUtils.renderAngular(response);
+        AngularPluginUtils.renderAngularMaterial(response);
+        AngularPluginUtils.renderPluginScripts(context, response);
+
     }
 }

@@ -1,6 +1,11 @@
 package com.github.ibronsveld.hippo.angular;
 
+import com.github.ibronsveld.hippo.angular.field.AngularFieldPlugin;
+import org.apache.wicket.markup.head.CssHeaderItem;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.request.http.WebRequest;
+import org.apache.wicket.request.resource.PackageResourceReference;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
@@ -36,5 +41,51 @@ public class AngularPluginUtils {
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
+    }
+
+    public static void renderPluginScripts(AngularPluginContext context, IHeaderResponse response) {
+
+        String[] cssLinks = context.getPluginConfig().getStringArray(PluginConstants.PLUGIN_CSS_URLS);
+        if (cssLinks != null && cssLinks.length > 0) {
+            // Add multiple scripts
+            for (int i = 0; i < cssLinks.length; i++) {
+                String css = cssLinks[i];
+                if (css != null && css.length() > 0)
+                    response.render(CssHeaderItem.forUrl(css));
+            }
+        }
+
+        String[] fieldJS = context.getPluginConfig().getStringArray(PluginConstants.PLUGIN_JAVASCRIPT_URLS);
+        if (fieldJS != null && fieldJS.length > 0) {
+            // Add multiple scripts
+            for (int i = 0; i < fieldJS.length; i++) {
+                String javaScript = fieldJS[i];
+                if (javaScript != null && javaScript.length() > 0)
+                    response.render(JavaScriptHeaderItem.forUrl(javaScript));
+            }
+        }
+
+        // Add the SDK for the Hippo Angular
+        response.render(JavaScriptHeaderItem.forReference(new PackageResourceReference(AngularFieldPlugin.class, "hippoAngularSDK.js")));
+    }
+
+
+    public static void renderAngular(IHeaderResponse response) {
+        response.render(JavaScriptHeaderItem.forReference(new PackageResourceReference(AngularFieldPlugin.class, "angular.js")));
+        response.render(JavaScriptHeaderItem.forReference(new PackageResourceReference(AngularFieldPlugin.class, "angular-animate.js")));
+        response.render(JavaScriptHeaderItem.forReference(new PackageResourceReference(AngularFieldPlugin.class, "angular-aria.js")));
+        response.render(JavaScriptHeaderItem.forReference(new PackageResourceReference(AngularFieldPlugin.class, "angular-messages.js")));
+        response.render(JavaScriptHeaderItem.forReference(new PackageResourceReference(AngularFieldPlugin.class, "angular-resource.js")));
+    }
+
+    public static void renderAngularMaterial(IHeaderResponse response) {
+        response.render(JavaScriptHeaderItem.forReference(new PackageResourceReference(AngularFieldPlugin.class, "angular-material.min.js")));
+
+        // Add material css
+        response.render(CssHeaderItem.forReference(new PackageResourceReference(AngularFieldPlugin.class, "angular-material.css")));
+
+        // Add material fonts
+        // TODO: Change?
+        response.render(CssHeaderItem.forUrl("https://fonts.googleapis.com/icon?family=Material+Icons"));
     }
 }
