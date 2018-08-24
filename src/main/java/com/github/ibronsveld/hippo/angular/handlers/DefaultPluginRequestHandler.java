@@ -1,6 +1,7 @@
 package com.github.ibronsveld.hippo.angular.handlers;
 
 import com.github.ibronsveld.hippo.angular.AngularPluginContext;
+import com.github.ibronsveld.hippo.angular.PluginConstants;
 import com.github.ibronsveld.hippo.angular.behaviors.PluginRequest;
 import com.github.ibronsveld.hippo.angular.behaviors.PluginResponse;
 import com.github.ibronsveld.hippo.angular.field.AbstractAngularFieldPlugin;
@@ -26,14 +27,14 @@ public class DefaultPluginRequestHandler extends AbstractPluginRequestHandler {
     private PluginResponse getPluginConfig(PluginRequest pluginRequest) {
         PluginResponse pluginResponse = new PluginResponse();
 
-        if (pluginRequest.getAction().equals(ACTION_CONFIG)) {
-            String config = this.getPluginContext().getAngularPluginConfiguration(pluginRequest.getAsString("key"));
-            if (config != null) {
-                pluginResponse.addResponseBody(config);
-            } else {
-                pluginResponse.setError(404, "Not found");
-            }
+        String config = this.getPluginContext().getAngularPluginConfiguration(PluginConstants.PLUGIN_CONFIGURATION);
+
+        if (config != null) {
+            pluginResponse.addResponseBody(config);
+        } else {
+            pluginResponse.setError(404, "Not found");
         }
+
         return pluginResponse;
     }
 
