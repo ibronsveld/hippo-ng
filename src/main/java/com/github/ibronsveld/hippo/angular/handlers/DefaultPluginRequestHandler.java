@@ -26,7 +26,7 @@ public class DefaultPluginRequestHandler extends AbstractPluginRequestHandler {
     private PluginResponse getPluginConfig(PluginRequest pluginRequest) {
         PluginResponse pluginResponse = new PluginResponse();
 
-        if (pluginRequest.get("key") != null && !pluginRequest.getAsString("key").equals("")) {
+        if (pluginRequest.getAction().equals(ACTION_CONFIG)) {
             String config = this.getPluginContext().getAngularPluginConfiguration(pluginRequest.getAsString("key"));
             if (config != null) {
                 pluginResponse.addResponseBody(config);
