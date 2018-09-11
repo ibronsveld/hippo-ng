@@ -177,7 +177,6 @@ public class AngularPluginContext {
      */
     public JsonObject getModelAsJson() {
         JsonObject jsonObject = new JsonObject();
-        final Gson gson = new GsonBuilder().create();
 
         try {
             JsonObject modelObject = new JsonObject();
