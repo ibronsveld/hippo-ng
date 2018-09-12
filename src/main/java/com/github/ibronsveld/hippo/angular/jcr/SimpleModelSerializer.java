@@ -31,8 +31,10 @@ public class SimpleModelSerializer extends JcrModelSerializer {
             final Property property = node.getProperty(this.propertyName);
             String value = property.getValue().getString();
             jsonObj.addProperty("data", value);
-            return jsonObj;
+        } else {
+            jsonObj.addProperty("data", "");
         }
-        return new JsonObject();
+
+        return jsonObj;
     }
 }
