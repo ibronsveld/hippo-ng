@@ -12,7 +12,7 @@ import javax.jcr.Value;
 public abstract class JcrModelSerializer {
 
     private static String DOCUMENT_NODE_TYPE = "hippostdpubwf:document";
-    private static String DOCUMENT_FIELDS = "hippostd:holder,hippostdpubwf:createdBy,hippostdpubwf:lastModifiedBy,hippostdpubwf:creationDate,hippostdpubwf:lastModificationDate,hippotranslation:locale";
+    private static String DOCUMENT_FIELDS = "hippostd:holder,hippostdpubwf:createdBy,hippostdpubwf:lastModifiedBy,hippostdpubwf:creationDate,hippostdpubwf:lastModificationDate,hippotranslation:locale,";
 
     public JsonObject convertNodeToJson(JsonObject jsonObject, Node node) throws RepositoryException {
         // Fix for the usage of compounds
@@ -43,6 +43,11 @@ public abstract class JcrModelSerializer {
         JsonObject base = new JsonObject();
 
         Gson gson = new GsonBuilder().create();
+
+
+        // We should add the parent Node ID to this
+        String UUID = node.getParent().getIdentifier();
+        base.addProperty("UUID", UUID);
 
         // Fix for the usage of compounds
         // If it does not have the mixin "hippostdpubwf:document", check if node has a parent with that
