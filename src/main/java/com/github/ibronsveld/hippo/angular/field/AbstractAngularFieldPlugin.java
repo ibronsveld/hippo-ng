@@ -120,15 +120,15 @@ public abstract class AbstractAngularFieldPlugin extends RenderPlugin<Node> impl
             return jcrModelSerializer;
 
         } catch (ClassNotFoundException e) {
-            log.error("Cannot create dialog with name '{}'", modelSerializer, e);
+            log.error("Cannot create serializer with name '{}'", modelSerializer, e);
         } catch (NoSuchMethodException e) {
-            log.error("Cannot create dialog with name '{}'", modelSerializer, e);
+            log.error("Cannot create serializer with name '{}'", modelSerializer, e);
         } catch (InvocationTargetException e) {
-            log.error("Cannot create dialog with name '{}'", modelSerializer, e);
+            log.error("Cannot create serializer with name '{}'", modelSerializer, e);
         } catch (InstantiationException e) {
-            log.error("Cannot create dialog with name '{}'", modelSerializer, e);
+            log.error("Cannot create serializer with name '{}'", modelSerializer, e);
         } catch (IllegalAccessException e) {
-            log.error("Cannot create dialog with name '{}'", modelSerializer, e);
+            log.error("Cannot create serializer with name '{}'", modelSerializer, e);
         }
 
         return null;

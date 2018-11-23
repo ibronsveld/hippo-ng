@@ -42,4 +42,6 @@ public class AngularPanelPlugin extends RenderPlugin {
     public AngularPluginContext getAngularPluginContext() {
         return pluginContext;
     }
+
+
 }

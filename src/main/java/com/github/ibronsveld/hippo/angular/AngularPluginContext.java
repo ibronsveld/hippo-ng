@@ -180,17 +180,18 @@ public class AngularPluginContext {
 
         try {
             JsonObject modelObject = new JsonObject();
-            modelObject = this.getModelSerializer().convertNodeToJson(modelObject, documentModel.getNode());
-            jsonObject.add("model", modelObject);
+            if (documentModel != null) {
+                modelObject = this.getModelSerializer().convertNodeToJson(modelObject, documentModel.getNode());
+                jsonObject.add("model", modelObject);
 
-            if (compareBaseDocumentModel != null) {
-                JsonObject compareObject = new JsonObject();
-                compareObject = this.getModelSerializer().convertNodeToJson(compareObject, compareBaseDocumentModel.getNode());
-                jsonObject.add("compareModel", compareObject);
-            } else {
-                //jsonObject.add("compareModel", "");
+                if (compareBaseDocumentModel != null) {
+                    JsonObject compareObject = new JsonObject();
+                    compareObject = this.getModelSerializer().convertNodeToJson(compareObject, compareBaseDocumentModel.getNode());
+                    jsonObject.add("compareModel", compareObject);
+                } else {
+                    //jsonObject.add("compareModel", "");
+                }
             }
-
         } catch (RepositoryException e) {
             e.printStackTrace();
         }
