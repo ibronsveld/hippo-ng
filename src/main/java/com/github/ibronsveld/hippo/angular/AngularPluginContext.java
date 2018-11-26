@@ -10,10 +10,12 @@ import org.hippoecm.frontend.model.JcrNodeModel;
 import org.hippoecm.frontend.plugin.IPluginContext;
 import org.hippoecm.frontend.plugin.config.IPluginConfig;
 import com.github.ibronsveld.hippo.angular.jcr.JcrModelSerializer;
+import org.hippoecm.frontend.session.UserSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -196,6 +198,13 @@ public class AngularPluginContext {
             e.printStackTrace();
         }
         return jsonObject;
+    }
+
+
+    //Session session = UserSession.get().getWorkflowManager()
+    public String getCurrentUser() {
+        Session session = UserSession.get().getJcrSession();
+        return "";
     }
 
 }
