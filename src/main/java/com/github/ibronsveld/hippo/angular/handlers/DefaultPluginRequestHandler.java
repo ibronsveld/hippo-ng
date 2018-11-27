@@ -5,6 +5,7 @@ import com.github.ibronsveld.hippo.angular.PluginConstants;
 import com.github.ibronsveld.hippo.angular.behaviors.PluginRequest;
 import com.github.ibronsveld.hippo.angular.behaviors.PluginResponse;
 import com.github.ibronsveld.hippo.angular.field.AbstractAngularFieldPlugin;
+import org.hippoecm.frontend.session.UserSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,6 +18,7 @@ public class DefaultPluginRequestHandler extends AbstractPluginRequestHandler {
     private static final String ACTION_CONFIG = "config";
     private static final String ACTION_UPDATE_MODEL = "setmodel";
     private static final String ACTION_GET_MODEL = "getmodel";
+    private static final String ACTION_GET_USER = "getuser";
 
     private static final String MODEL_KEY = "model";
 
@@ -64,6 +66,14 @@ public class DefaultPluginRequestHandler extends AbstractPluginRequestHandler {
         return pluginResponse;
     }
 
+
+    private PluginResponse getUser(PluginRequest pluginRequest) {
+        PluginResponse pluginResponse = new PluginResponse();
+        //final String fieldJson = this.getPluginContext().getModelAsJson().toString();
+        pluginResponse.addResponseBody(UserSession.get().getJcrSession().getUserID());
+        return pluginResponse;
+    }
+
     @Override
     public boolean canProcess(PluginRequest request) {
         if (request.getAction() != null && !request.getAction().equals("")) {
@@ -74,6 +84,8 @@ public class DefaultPluginRequestHandler extends AbstractPluginRequestHandler {
                 case DefaultPluginRequestHandler.ACTION_UPDATE_MODEL:
                     return true;
                 case DefaultPluginRequestHandler.ACTION_GET_MODEL:
+                    return true;
+                case DefaultPluginRequestHandler.ACTION_GET_USER:
                     return true;
                 default:
                     return false;
@@ -96,6 +108,10 @@ public class DefaultPluginRequestHandler extends AbstractPluginRequestHandler {
                 case DefaultPluginRequestHandler.ACTION_GET_MODEL:
                     // Store model
                     return getModel(request);
+                case DefaultPluginRequestHandler.ACTION_GET_USER:
+                    // Store model
+                    return getUser(request);
+
                 default:
                     return null;
             }
