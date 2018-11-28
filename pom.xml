@@ -68,13 +68,21 @@
         </developer>
     </developers>
 
-    <repositories>
+    <scm>
+        <connection>scm:git:https://github.com/ibronsveld/hippo-ng.git</connection>
+        <developerConnection>scm:git:git@github.com:ibronsveld/hippo-ng.git</developerConnection>
+        <url>https://github.com/ibronsveld/hippo-ng</url>
+        <tag>HEAD</tag>
+    </scm>
+
+    <distributionManagement>
         <repository>
-            <id>hippo</id>
-            <name>Hippo maven 2 repository.</name>
-            <url>http://maven.onehippo.com/maven2/</url>
+            <name>Hippo Maven 2 Private Repository</name>
+            <id>hippo-maven2-private</id>
+            <url> https://maven.onehippo.com/content/repositories/private-releases/</url>
+            <uniqueVersion>false</uniqueVersion>
         </repository>
-    </repositories>
+    </distributionManagement>
 
     <dependencyManagement>
         <dependencies>

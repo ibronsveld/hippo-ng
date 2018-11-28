@@ -103,7 +103,7 @@ public class WorkflowRequestHandler extends AbstractPluginRequestHandler {
                     return handleRequest(request, workflow, "reject");
 
                 case WorkflowRequestHandler.ACTION_DEPUBLISH_REQUEST:
-                    return handleRequest(request, workflow, "reject");
+                    return depublish(request, workflow);
 
                 case WorkflowRequestHandler.ACTION_CANCEL_REQUEST:
                     return handleRequest(request, workflow, "cancel");
@@ -146,11 +146,39 @@ public class WorkflowRequestHandler extends AbstractPluginRequestHandler {
             if (hints.containsKey("publish") && Boolean.parseBoolean(hints.get("publish").toString())) {
                 workflow.publish();
                 pluginResponse.addResponseBody("published");
+            } else {
+                if (hints.containsKey("requestPublication") && Boolean.parseBoolean(hints.get("requestPublication").toString())) {
+                    workflow.requestPublication();
+                    pluginResponse.addResponseBody("publicationrequested");
+                }
             }
 
-            if (hints.containsKey("requestPublication") && Boolean.parseBoolean(hints.get("requestPublication").toString())) {
-                workflow.requestPublication();
-                pluginResponse.addResponseBody("publicationrequested");
+
+        } catch (WorkflowException | RepositoryException | RemoteException e) {
+            log.error("Error publishing document", e);
+            pluginResponse.setError(500, e.getMessage());
+        }
+
+        return pluginResponse;
+    }
+
+    private PluginResponse depublish(PluginRequest request, DocumentWorkflow workflow){
+        // Do something here
+        PluginResponse pluginResponse = new PluginResponse();
+
+        try {
+            // TODO: Figure out how to do the actual action depending on user context
+            // TODO: Handle date
+            Map<String, Serializable> hints = workflow.hints();
+
+            if (hints.containsKey("depublish") && Boolean.parseBoolean(hints.get("depublish").toString())) {
+                workflow.publish();
+                pluginResponse.addResponseBody("depublished");
+            } else {
+                if (hints.containsKey("requestDepublication") && Boolean.parseBoolean(hints.get("requestDepublication").toString())) {
+                    workflow.requestPublication();
+                    pluginResponse.addResponseBody("depublicationrequested");
+                }
             }
 
 
