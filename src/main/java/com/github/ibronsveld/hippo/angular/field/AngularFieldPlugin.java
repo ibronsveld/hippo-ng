@@ -18,15 +18,32 @@ package com.github.ibronsveld.hippo.angular.field;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.StringResourceModel;
+import org.hippoecm.frontend.editor.plugins.field.FieldPluginHelper;
+import org.hippoecm.frontend.editor.plugins.fieldhint.FieldHint;
 import org.hippoecm.frontend.plugin.IPluginContext;
 import org.hippoecm.frontend.plugin.config.IPluginConfig;
 import com.github.ibronsveld.hippo.angular.PluginConstants;
+import org.hippoecm.frontend.types.IFieldDescriptor;
 
 public class AngularFieldPlugin extends AbstractAngularFieldPlugin {
 
     public AngularFieldPlugin(final IPluginContext context, IPluginConfig config) {
         super(context, config);
+
         add(new Label("angularfield-caption", getCaptionModel()));
+
+        FieldPluginHelper helper = new FieldPluginHelper(context,config);
+        final Label required = new Label("required", "*");
+        add(required);
+
+        final IFieldDescriptor field = helper.getField();
+        if (field != null) {
+            if (!field.getValidators().contains("required")) {
+                required.setVisible(false);
+            }
+        }
+
+        add(new FieldHint("hint-panel", helper.getHintModel(this).getObject()));
     }
 
     protected IModel<String> getCaptionModel() {
