@@ -17,8 +17,9 @@
         <project.build.javaVersion>1.7</project.build.javaVersion>
 
         <jcr.version>2.0</jcr.version>
-        <hippo.repository.version>3.2.1</hippo.repository.version>
-        <hippo.cms.version>3.2.1</hippo.cms.version>
+        <hippo.repository.version>5.6.0</hippo.repository.version>
+        <hippo.cms.version>5.6.0</hippo.cms.version>
+        <hippo.cms.ckeditor.version>5.6.0</hippo.cms.ckeditor.version>
 
         <commons-lang.version>2.6</commons-lang.version>
         <commons-collections.version>3.2.1</commons-collections.version>
@@ -290,7 +291,7 @@
         <dependency>
             <groupId>org.onehippo.cms7</groupId>
             <artifactId>hippo-cms-richtext-ckeditor-frontend</artifactId>
-            <version>5.3.0</version>
+            <version>${hippo.cms.ckeditor.version}</version>
         </dependency>
 
     </dependencies>
