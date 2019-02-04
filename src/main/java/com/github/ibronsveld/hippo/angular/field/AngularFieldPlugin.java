@@ -30,7 +30,7 @@ public class AngularFieldPlugin extends AbstractAngularFieldPlugin {
     public AngularFieldPlugin(final IPluginContext context, IPluginConfig config) {
         super(context, config);
 
-        add(new Label("angularfield-caption", getCaptionModel()));
+        add(new Label("angularfield-caption", new Model(this.getPluginConfig().getString("caption", "Asset"))));
 
         FieldPluginHelper helper = new FieldPluginHelper(context,config);
         final Label required = new Label("required", "*");
@@ -46,12 +46,13 @@ public class AngularFieldPlugin extends AbstractAngularFieldPlugin {
         add(new FieldHint("hint-panel", helper.getHintModel(this).getObject()));
     }
 
-    protected IModel<String> getCaptionModel() {
+    /*protected IModel<String> getCaptionModel() {
         final String defaultCaption = new StringResourceModel("angularfield.caption", this, null,
                 PluginConstants.DEFAULT_FIELD_CAPTION)
                 .getString();
         String caption = getPluginConfig().getString("caption", defaultCaption);
         String captionKey = caption;
+
         return new StringResourceModel(captionKey, this, null, caption);
-    }
+    }*/
 }
